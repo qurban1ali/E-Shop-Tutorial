@@ -65,7 +65,7 @@ router.post(
         zipCode: req.body.zipCode,
       };
       const activationToken = createActivationToken(seller);
-      const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+      const activationUrl = `https://e-shop-tutorial-juch.vercel.app/seller/activation/${activationToken}`;
 
       await sendMail({
         email: seller.email,

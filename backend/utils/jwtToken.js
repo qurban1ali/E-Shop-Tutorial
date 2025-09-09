@@ -6,19 +6,16 @@ const sendToken = (user, statusCode, resp) => {
   // OPTIONS FOR COOKIES
   const options = {
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
-    httpOnly: true, 
+    httpOnly: true,
     sameSite: "none",
-    secure: true
+    secure: true,
   };
 
-  resp
-    .status(statusCode)
-    .cookie("token", token, options)
-    .json({
-      success: true,
-      user,
-      token,
-    });
+  resp.status(statusCode).cookie("token", token, options).json({
+    success: true,
+    user,
+    token,
+  });
 };
 
 module.exports = sendToken;

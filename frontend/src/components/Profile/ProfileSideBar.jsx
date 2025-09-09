@@ -112,7 +112,7 @@ const ProfileSideBar = ({ setActive, active }) => {
         onClick={() => setActive(8)}
       >
         <MdOutlineAdminPanelSettings size={20} color={active === 8 ? "red" : ""} />
-        <span className={`${active === 7 ? "text-[red]" : ""} 800px:block hidden pl-3 `}>
+        <span className={`${active === 8 ? "text-[red]" : ""} 800px:block hidden pl-3 `}>
           Admin Dashboard
         </span>
       </div>
@@ -125,7 +125,7 @@ const ProfileSideBar = ({ setActive, active }) => {
         onClick={() => setActive(8) || logoutHandler()}
       >
         <AiOutlineLogout size={20} color={active === 8 ? "red" : ""} />
-        <span className={`${active === 8 ? "text-[red]" : ""} 800px:block hidden pl-3 `}>
+        <span className={`${active === 9 ? "text-[red]" : ""} 800px:block hidden pl-3 `}>
           Log out
         </span>
       </div>

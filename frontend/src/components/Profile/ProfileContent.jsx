@@ -6,7 +6,7 @@ import {
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../../styles/style";
-import { Avatar } from "../../assests/asset";
+// import { Avatar } from "../../assests/asset";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -30,7 +30,7 @@ const ProfileContent = ({ active }) => {
   const fullAvatarUrl =
     avatarUrl && !avatarUrl.startsWith("http")
       ? `${backend_url}${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl}`
-      : avatarUrl || Avatar;
+      : avatarUrl || null;
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -86,9 +86,6 @@ const ProfileContent = ({ active }) => {
             <div className="relative">
               <img
                 src={fullAvatarUrl}
-                onError={(e) => {
-                  e.target.src = Avatar;
-                }}
                 className="w-36 h-36 border-green-700 rounded-full border-3"
                 alt="User Avatar"
               />

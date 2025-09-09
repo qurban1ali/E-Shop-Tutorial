@@ -8,7 +8,7 @@ const sendToken = (user, statusCode, resp) => {
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
     httpOnly: true, 
     sameSite: "none",
-    Secure: true
+    secure: true
   };
 
   resp

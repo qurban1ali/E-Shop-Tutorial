@@ -22,7 +22,7 @@ app.use(
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
-app.use("/uploads", (req, res) => {
+app.use("/", (req, res) => {
   res.send("Hello world!")
 });
 

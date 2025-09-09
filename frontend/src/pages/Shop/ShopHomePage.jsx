@@ -6,11 +6,11 @@ import ShopProfileData from "../../components/shop/ShopProfileData"
 const ShopHomePage = () => {
   return (
     <div className={`${styles.section} bg-[#f5f5f5]`}>
-            <div className="w-full flex-col 800px:flex py-10  justify-between">
-              <div className="800px:w-[25%] w-[100%]  bg-[#fff] shadow-sm sticky left-0 z-10 rounded-[4px]  overflow-y-scroll h-[90vh] top-10 ">
+            <div className="w-full flex py-10  justify-between">
+              <div className="w-[25%] bg-[#fff] shadow-sm sticky left-0 z-10 rounded-[4px]  overflow-y-scroll h-[90vh] top-10 ">
                 <ShopInfo isOwner={true} />
               </div>
-              <div className="800px:w-[72%]  w-[100%] rounded-[4px]">
+              <div className="w-[72%] rounded-[4px]">
                 <ShopProfileData isOwner={true} />
               </div>
             </div>

@@ -28,11 +28,11 @@ const ShopPreviewPage = () => {
 
   return (
     <div className={`${styles.section} bg-[#f5f5f5]`}>
-      <div className="w-full 800px:flex py-10 justify-between">
-        <div className="w-[25%] bg-[#fff] shadow-sm sticky left-0 z-10 rounded-[4px] overflow-y-scroll h-[90vh] top-10">
+      <div className="w-full flex flex-col 800px:flex 800px:flex-row py-10 justify-between">
+        <div className="w-full 800px:w-[25%] bg-[#fff] shadow-sm 800px:sticky left-0 z-10 rounded-[4px] overflow-y-scroll h-[90vh] top-10">
           <ShopInfo isOwner={false} shop={shop} />
         </div>
-        <div className="w-[72%] rounded-[4px]">
+        <div className="w-full 800px:w-[72%] rounded-[4px]">
           <ShopProfileData isOwner={false} shop={shop} />
         </div>
       </div>

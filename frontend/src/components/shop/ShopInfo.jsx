@@ -50,7 +50,7 @@ const dispatch = useDispatch();
  const averageRating = totalRatings / totalReviewsLength || 0;
   
   return (
-    <>
+    <>             
       {isLoading ? (
         <Loader />
       ) : (

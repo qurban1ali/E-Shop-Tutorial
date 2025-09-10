@@ -1,50 +1,42 @@
 const app = require("./app");
 const connectDB = require("./db/dataBase");
 const cloudinary = require("cloudinary");
-const path = require("path");
-require("dotenv").config({
-  path: "config/.env",
-});
+require("dotenv").config({ path: "config/.env" });
 
-// ✅ Serve uploads folder outside backend
-// const uploadsPath = path.resolve(__dirname, "../uploads");
-// app.use("/uploads", require("express").static(uploadsPath));
-
-// ✅ Debug: confirm uploads path
-// console.log("Uploads served at:", uploadsPath);
-
+// ✅ Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Handling uncaught exceptions
+// ✅ Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`Shutting down due to uncaught exception`);
-  process.exit(1);
+  console.log(`❌ Uncaught Exception: ${err.message}`);
 });
 
-// Connect to DB and start server
+// ✅ Connect DB (once) before handling requests
 (async () => {
   try {
     await connectDB();
 
-    const server = app.listen(process.env.PORT, () => {
-      console.log(`✅ Server running at http://localhost:${process.env.PORT}`);
-    });
-           
-    // Handling unhandled promise rejections
+    // 👉 If running locally, start server
+    if (process.env.NODE_ENV !== "production") {
+      const PORT = process.env.PORT || 8000;
+      app.listen(PORT, () => {
+        console.log(`✅ Server running at http://localhost:${PORT}`);
+      });
+    }
+
+    // 👉 On Vercel, we just export the app (no listen)
+    module.exports = app;
+
+    // ✅ Handle unhandled promise rejections
     process.on("unhandledRejection", (err) => {
       console.log(`❌ Unhandled Rejection: ${err.message}`);
-      server.close(() => {
-        process.exit(1);
-      });
     });
 
   } catch (err) {
     console.error("❌ Server startup failed:", err.message);
-    process.exit(1);
   }
 })();

@@ -7,11 +7,11 @@ require("dotenv").config({
 });
 
 // ✅ Serve uploads folder outside backend
-const uploadsPath = path.resolve(__dirname, "../uploads");
-app.use("/uploads", require("express").static(uploadsPath));
+// const uploadsPath = path.resolve(__dirname, "../uploads");
+// app.use("/uploads", require("express").static(uploadsPath));
 
 // ✅ Debug: confirm uploads path
-console.log("Uploads served at:", uploadsPath);
+// console.log("Uploads served at:", uploadsPath);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,

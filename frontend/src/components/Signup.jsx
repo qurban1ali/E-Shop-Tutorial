@@ -26,25 +26,34 @@ const SignUp = () => {
   e.preventDefault();
   let avatarUrl = "";
 
-  if (avatar) {
-    const formData = new FormData();
-    formData.append("file", avatar);
-    formData.append("upload_preset", "YOUR_PRESET");
+  try {
+    // ✅ Upload avatar to Cloudinary first
+    if (avatar) {
+      const formData = new FormData();
+      formData.append("file", avatar);
+      formData.append("upload_preset", "ecommerce_unsigned"); // create this preset in Cloudinary
 
-    const cloudRes = await axios.post(
-      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
-      formData
-    );
-    avatarUrl = cloudRes.data.secure_url;
+      const cloudRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+        formData
+      );
+      avatarUrl = cloudRes.data.secure_url;
+    }
+
+    // ✅ Call backend to create user
+    const { data } = await axios.post(`${server}/user/create-user`, {
+      name,
+      email,
+      password,
+      avatarUrl,
+    });
+
+    toast.success(data.message);
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Signup failed");
   }
-
-  await axios.post(`${server}/user/create-user`, {
-    name,
-    email,
-    password,
-    avatarUrl,
-  });
 };
+
 
 
   return (

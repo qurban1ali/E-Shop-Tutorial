@@ -13,7 +13,6 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Enable CORS for frontend
-const cors = require("cors");
 
 app.use(cors({
   origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain

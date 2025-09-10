@@ -11,11 +11,12 @@ export const createProduct = (newForm) => async (dispatch) => {
 
 const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-    const { data } = await axios.post(
-      `${server}/product/create-product`,
-      newForm,
-      config
-    );
+  const { data } = await axios.post(
+  `${server}/product/create-product`,
+  newForm,
+  { withCredentials: true }   // ✅ let Axios set the right Content-Type
+);
+
     dispatch({
       type: "productCreateSuccess",
       payload: data.product,

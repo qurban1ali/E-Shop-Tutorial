@@ -19,6 +19,8 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+app.options("*", cors());
+
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));

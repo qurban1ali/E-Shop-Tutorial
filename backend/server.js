@@ -1,6 +1,6 @@
 const app = require("./app");
 const connectDB = require("./db/dataBase");
-const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary").v2;
 require("dotenv").config({ path: "config/.env" });
 
 // ✅ Cloudinary config
@@ -28,14 +28,13 @@ process.on("uncaughtException", (err) => {
       });
     }
 
-    // 👉 On Vercel, we just export the app (no listen)
+    // 👉 On Vercel, export the app
     module.exports = app;
 
     // ✅ Handle unhandled promise rejections
     process.on("unhandledRejection", (err) => {
       console.log(`❌ Unhandled Rejection: ${err.message}`);
     });
-
   } catch (err) {
     console.error("❌ Server startup failed:", err.message);
   }

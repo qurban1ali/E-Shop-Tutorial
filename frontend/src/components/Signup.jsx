@@ -31,7 +31,7 @@ const SignUp = () => {
     if (avatar) {
       const formData = new FormData();
       formData.append("file", avatar);
-      formData.append("upload_preset", "ecommerce_unsigned"); // create this preset in Cloudinary
+      formData.append("upload_preset", "ecommrence"); // create this preset in Cloudinary
 
       const cloudRes = await axios.post(
         "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
@@ -50,7 +50,7 @@ const SignUp = () => {
 
     toast.success(data.message);
   } catch (err) {
-    toast.error(err.response?.data?.message || "Signup failed");
+    toast.error(err.response?.data?.message);
   }
 };
 

@@ -15,28 +15,40 @@ router.post(
   upload.array("images"),
   catchAsyncErrors(async (req, res, next) => {
     try {
+      console.log("BODY:", req.body);
+      console.log("FILES:", req.files);
+
       const shopId = req.body.shopId;
+      if (!shopId) {
+        return next(new ErrorHandler("Shop ID is required!", 400));
+      }
+
       const shop = await Shop.findById(shopId);
       if (!shop) {
-        return next(new ErrorHandler("Shop Id is invalid!", 400));
-      } else {
-        const files = req.files;
-        const imageUrls = files.map((file) => `/uploads/${file.filename}`);
-        const productData = req.body;
-        productData.images = imageUrls;
-        productData.shop = shop;
-
-        const product = await Product.create(productData);
-        res.status(201).json({
-          success: true,
-          product,
-        });
+        return next(new ErrorHandler("Invalid Shop ID!", 400));
       }
+
+      const files = req.files || [];
+      const imageUrls = files.map((file) => `/uploads/${file.filename}`);
+
+      const productData = {
+        ...req.body,
+        images: imageUrls,
+        shop,
+      };
+
+      const product = await Product.create(productData);
+
+      res.status(201).json({
+        success: true,
+        product,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message || "Product creation failed", 400));
     }
   })
 );
+  
 
 // get all products of a shop
 router.get(

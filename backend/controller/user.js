@@ -51,6 +51,7 @@ router.post("/create-user", upload.single("file"), async (req, resp, next) => {
     const myCloud = await cloudinary.v2.uploader.upload(avatar, {
       folder: "avatars",
     });
+  
        
     const fileUrl = path.join("uploads", req.file.filename);
     const user = {

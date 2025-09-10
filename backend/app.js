@@ -13,12 +13,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Enable CORS for frontend
-app.use(
-  cors({
-    origin: "https://e-shop-tutorial-juch.vercel.app",
-    credentials: true,
-  })
-);
+const cors = require("cors");
+
+app.use(cors({
+  origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));

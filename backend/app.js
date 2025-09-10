@@ -13,19 +13,19 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Enable CORS for frontend
-
-app.use(cors({
-  origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.options("*", cors());
-
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use("/test", (req, res) => {
-  res.send("Hello world!")
+  res.send("Hello world!");
 });
 
 // Load environment variables (non-production)
@@ -56,6 +56,11 @@ app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
 app.use("/api/v2/withdraw", withdraw);
+
+// Catch-all for undefined API routes
+app.all("/*", (req, res) => {
+  res.status(404).json({ success: false, message: "API route not found" });
+});
 
 // Global error handling
 app.use(ErrorHandler);

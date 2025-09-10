@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import { AiOutlineCamera } from "react-icons/ai";
 import styles from "../../styles/style";
 import axios from "axios";
@@ -70,7 +70,7 @@ formData.append("image", file);
               src={
                 avatar
                   ? URL.createObjectURL(avatar)
-                  : `${backend_url}/${seller.avatar.url}`
+                  : `${seller.avatar.url}`
               }
               alt=""
               className="w-[150px] h-[150px] rounded-full cursor-pointer"

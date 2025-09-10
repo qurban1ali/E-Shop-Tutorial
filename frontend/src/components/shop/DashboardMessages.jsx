@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useReducer, useState } from "react";
-import { backend_url, server } from "../../server";
+import {  server } from "../../server";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
@@ -278,7 +278,7 @@ const MessageList = ({
     >
       <div className="relative">
         <img
-          src={`${backend_url}${user?.avatar?.url}`}
+          src={`${user?.avatar?.url}`}
           alt=""
           className="w-[50px] h-[50px] rounded-full"
         />
@@ -353,7 +353,7 @@ const SellerInbox = ({
               )}
               {item.images && (
                 <img
-                  src={`${backend_url}${item.images}`}
+                  src={`${item.images.url}`}
                   alt=""
                   className="h-[300px] object-cover w-[300px] rounded-[10px] mr-2"
                 />

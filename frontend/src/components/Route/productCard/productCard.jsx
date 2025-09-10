@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/style";
 import ProductDetailCard from "../ProductDetailCard/ProductDetailCard.jsx";
-import { backend_url } from "../../../server";
 import {
   AiFillHeart,
   AiOutlineEye,
@@ -71,7 +70,7 @@ const ProductCard = ({ data, isEvent }) => {
         {/* Product Image */}
         <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
           <img
-            src={`${backend_url}${data?.images?.[0]}`}
+            src={`${data?.images?.[0].url}`}
             alt={data?.name || "Product"}
             className="w-full h-[170px] object-contain"
           />

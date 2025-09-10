@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import styles from "../../styles/style";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
@@ -58,7 +58,7 @@ const dispatch = useDispatch();
           <div className="w-full py-5">
             <div className="w-full flex items-center justify-center">
               <img
-                src={`${backend_url}/${data.avatar?.url}`}
+                src={`${data.avatar?.url}`}
                 alt=""
                 className="w-[150px] h-[150px] object-cover rounded-full"
               />

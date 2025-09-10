@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addToCart } from '../../redux/actions/cart'
 import { useDispatch, useSelector } from 'react-redux'
-import { backend_url } from '../../server'
 
 const EventCard = ({ active, data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -13,7 +12,7 @@ const EventCard = ({ active, data }) => {
 
   if (!data) return null; 
     const imageUrl = data?.images?.[0]
-  ? `${backend_url}${data.images?.[0]}`
+  ? `${data.images?.[0].url}`
   : "";
 
   const addToCartHandler = (data) => {

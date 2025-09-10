@@ -1,5 +1,6 @@
 const app = require("./app");
 const connectDB = require("./db/dataBase");
+const cloudinary = require("cloudinary");
 const path = require("path");
 require("dotenv").config({
   path: "config/.env",
@@ -11,6 +12,12 @@ app.use("/uploads", require("express").static(uploadsPath));
 
 // ✅ Debug: confirm uploads path
 console.log("Uploads served at:", uploadsPath);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Handling uncaught exceptions
 process.on("uncaughtException", (err) => {
@@ -27,7 +34,7 @@ process.on("uncaughtException", (err) => {
     const server = app.listen(process.env.PORT, () => {
       console.log(`✅ Server running at http://localhost:${process.env.PORT}`);
     });
-
+           
     // Handling unhandled promise rejections
     process.on("unhandledRejection", (err) => {
       console.log(`❌ Unhandled Rejection: ${err.message}`);

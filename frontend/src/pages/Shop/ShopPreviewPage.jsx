@@ -4,7 +4,7 @@ import styles from "../../styles/style";
 import ShopInfo from "../../components/shop/ShopInfo";
 import ShopProfileData from "../../components/shop/ShopProfileData";
 import axios from "axios";
-import { backend_url } from "../../server";
+import { server } from "../../server";
 
 const ShopPreviewPage = () => {
   const { id } = useParams(); 
@@ -13,7 +13,7 @@ const ShopPreviewPage = () => {
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        const { data } = await axios.get(`${backend_url}/shop/get-shop-info/${id}`);
+        const { data } = await axios.get(`${server}/shop/get-shop-info/${id}`);
         setShop(data.shop);
       } catch (error) {
         console.error("Error fetching shop:", error);

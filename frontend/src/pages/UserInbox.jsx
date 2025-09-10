@@ -3,7 +3,7 @@ import Header from "../components/layout/Header";
 import { useSelector } from "react-redux";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
-import { backend_url, server } from "../server";
+import {server } from "../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
@@ -311,7 +311,7 @@ const MessageList = ({
       <div className="relative">
         {user?.avatar?.url ? (
           <img
-            src={`${backend_url}${user.avatar.url}`}
+            src={`${user.avatar.url}`}
             alt=""
             className="w-[50px] h-[50px] rounded-full"
           />
@@ -356,7 +356,7 @@ const SellerInbox = ({
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
-            src={`${backend_url}/${sellerData?.avatar.url}`}
+            src={`${sellerData?.avatar.url}`}
             // src={`${userData?.avatar?.url}`}
             alt=""
             className="w-[60px] h-[60px] rounded-full"
@@ -385,7 +385,7 @@ const SellerInbox = ({
             >
               {item.sender !== sellerId && (
                 <img
-                  src={`${backend_url}/${sellerData?.avatar.url}`}
+                  src={`${sellerData?.avatar.url}`}
                   // src={`${userData?.avatar?.url}`}
                   className="w-[40px] h-[40px] rounded-full mr-3"
                   alt=""
@@ -393,8 +393,7 @@ const SellerInbox = ({
               )}
               {item.images && (
                 <img
-                  src={`${backend_url}${item.images}`}
-                  // src={item.images}
+                  src={`${item.images.url}`}
                   className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2"
                   alt=""
                 />

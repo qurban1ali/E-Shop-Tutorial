@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MdOutlineTrackChanges, MdTrackChanges } from "react-icons/md";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import {
   deleteUserAddress,
   loadUser,
@@ -29,8 +29,8 @@ const ProfileContent = ({ active }) => {
   const avatarUrl = user?.avatar?.url;
   const fullAvatarUrl =
     avatarUrl && !avatarUrl.startsWith("http")
-      ? `${backend_url}${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl}`
-      : avatarUrl || null;
+      ? `${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl.url}`
+      : avatarUrl.url || null;
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);

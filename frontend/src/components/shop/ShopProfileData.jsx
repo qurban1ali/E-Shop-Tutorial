@@ -4,7 +4,6 @@ import styles from "../../styles/style";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { backend_url } from "../../server";
 import Ratings from "../Products/Ratings";
 import { getAllEventsShop } from "../../redux/actions/event";
 
@@ -104,7 +103,7 @@ const ShopProfileData = ({ isOwner }) => {
               <div key={index} className="">
                 <span className="w-full flex my-4">
                   <img
-                    src={`${backend_url}/${item.user.avatar.url}`}
+                    src={`${item.user.avatar.url}`}
                     alt=""
                     className="w-[50px] h-[50px] rounded-full"
                   />

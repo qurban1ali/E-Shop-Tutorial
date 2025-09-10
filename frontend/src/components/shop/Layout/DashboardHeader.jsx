@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {FiPackage, FiShoppingBag} from  "react-icons/fi"
 import { BiMessageSquareDetail } from "react-icons/bi";
-import { backend_url } from "../../../server";
 
 const DashboardHeader = () => {
   
@@ -15,8 +14,8 @@ const DashboardHeader = () => {
     const avatarUrl = seller?.avatar?.url;
   const fullAvatarUrl =
     avatarUrl && !avatarUrl.startsWith("http")
-      ? `${backend_url}${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl}`
-      : avatarUrl || null;
+      ? `${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl.url}`
+      : avatarUrl.url || null;
 
   return (
     <div className="w-full sticky top-0 flex items-center justify-between h-[80px] bg-white shadow left-0 z-30 px-4">

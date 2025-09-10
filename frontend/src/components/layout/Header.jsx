@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import Cart from "../Cart/Cart";
 import Wish from "../Wishlist/Wishlist.jsx";
-import { backend_url } from "../../server.js";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -29,7 +28,7 @@ const Header = ({ activeHeading }) => {
     const avatarUrl = user?.avatar?.url;
   const fullAvatarUrl =
     avatarUrl && !avatarUrl.startsWith("http")
-      ? `${backend_url}${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl}`
+      ? `${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl.url}`
       : avatarUrl || Avatar;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
@@ -97,7 +96,7 @@ const Header = ({ activeHeading }) => {
                     <Link key={index} to={`/product/${i._id}`}>
                       <div className="w-full flex items-start py-3">
                         <img
-                          src={`${backend_url}${i.images[0]}`}
+                          src={`${i.images[0].url}`}
                           className="w-[40px] h-[40px] mr-[10px]"
                           alt=""
                         />

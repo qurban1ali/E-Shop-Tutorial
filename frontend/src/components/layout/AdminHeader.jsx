@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {FiPackage, FiShoppingBag} from  "react-icons/fi"
 import { BiMessageSquareDetail } from "react-icons/bi";
-import { backend_url } from '../../server';
 
 
 
@@ -67,7 +66,7 @@ const { user } = useSelector((state) => state.user);
           </Link>
 
 
-          <img src={`${backend_url}/${user?.avatar.url}`} 
+          <img src={`${user?.avatar?.url}`} 
           alt="" className="w-[50px] h-[50px] rounded-full object-cover" />
         </div>
       </div>

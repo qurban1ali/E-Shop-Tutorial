@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
-import { backend_url } from "../../../server";
 import { addToWishlist, removeFromWishlist } from "../../../redux/actions/wishlist";
 // import e from "express";
 
@@ -77,10 +76,10 @@ const ProductDetailCard = ({ setOpen, data }) => {
             <div className="block w-[100%] 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 {/* <img src={data.image_Url[0].url} alt="" /> */}
-                <img src={`${backend_url}${data.images[0]}`} alt="" />
+                <img src={`${data.images[0].url}`} alt="" />
                 <div className="flex">
                   <img
-                    src={`${backend_url}/${data?.shop?.avatar.url}`}
+                    src={`${data?.shop?.avatar.url}`}
                     alt=""
                     className="w-[50px] h-[50px] rounded-full mr-2 "
                   />

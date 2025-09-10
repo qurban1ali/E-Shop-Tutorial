@@ -15,39 +15,24 @@ const sendMail = require("../utils/sendMail");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const { url } = require("inspector");
 
-router.post("/create-user", upload.single("file"), async (req, resp, next) => {
+
+
+
+router.post("/create-user", async (req, res, next) => {
   try {
-    console.log("REQ.BODY:", req.body);
-    console.log("REQ.FILE:", req.file);
+    const { name, email, password, avatarUrl } = req.body;
 
-    const { name, email, password } = req.body;
-    const userEmail = await User.findOne({ email });
-
-    if (userEmail) {
-      if (req.file) {
-        const filePath = path.join(__dirname, "../uploads", req.file.filename);
-        try {
-          await fs.promises.unlink(filePath);
-          console.log(`✅ Deleted file: ${req.file.filename}`);
-        } catch (err) {
-          console.error(`⚠️ Failed to delete file:`, err.message);
-        }
-      }
+    const userExists = await User.findOne({ email });
+    if (userExists) {
       return next(new ErrorHandler("User already exists", 400));
     }
-
-    // ✅ Upload file to Cloudinary
-    const myCloud = await cloudinary.v2.uploader.upload(req.file.path, {
-      folder: "avatars",
-    });
 
     const user = {
       name,
       email,
       password,
       avatar: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
+        url: avatarUrl || "default-avatar.png",
       },
     };
 
@@ -57,10 +42,10 @@ router.post("/create-user", upload.single("file"), async (req, resp, next) => {
     await sendMail({
       email: user.email,
       subject: "Activate your account",
-      message: `Hello ${user.name}, please click the link to activate your account: ${activationUrl}`,
+      message: `Hello ${user.name}, please click the link: ${activationUrl}`,
     });
 
-    resp.status(201).json({
+    res.status(201).json({
       success: true,
       message: `Please check your email (${user.email}) to activate your account.`,
     });
@@ -70,43 +55,12 @@ router.post("/create-user", upload.single("file"), async (req, resp, next) => {
 });
 
 
-// chat gpt code
-// router.post("/create-user", async (req, resp, next) => {
-//   try {
-//     const { name, email, password, avatarUrl } = req.body; // frontend should send avatar as base64 URL or Cloudinary URL
 
-//     const userExists = await User.findOne({ email });
-//     if (userExists) {
-//       return next(new ErrorHandler("User already exists", 400));
-//     }
 
-//     const user = {
-//       name,
-//       email,
-//       password,
-//       avatar: {
-//         url: avatarUrl || "default-avatar.png",
-//       },
-//     };
 
-//     const activationToken = createActivationToken(user);
-//     const activationUrl = `https://e-shop-tutorial-juch.vercel.app/activation/${activationToken}`;
 
-//     await sendMail({
-//       email: user.email,
-//       subject: "Activate your account",
-//       message: `Hello ${user.name}, please click the link to activate your account: ${activationUrl}`,
-//     });
 
-//     resp.status(201).json({
-//       success: true,
-//       message: `Please check your email (${user.email}) to activate your account.`,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return next(new ErrorHandler(error.message, 500));
-//   }
-// });
+
 
 
 // CREATE ACTIVATION TOKEN

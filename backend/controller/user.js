@@ -15,45 +15,32 @@ const sendMail = require("../utils/sendMail");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const { url } = require("inspector");
 
-// CREATE A USER
 router.post("/create-user", upload.single("file"), async (req, resp, next) => {
   try {
     console.log("REQ.BODY:", req.body);
     console.log("REQ.FILE:", req.file);
-    const filename = req.file?.filename;
-    console.log("upload file", filename);
 
     const { name, email, password } = req.body;
     const userEmail = await User.findOne({ email });
 
     if (userEmail) {
-      const filename = req.file?.filename;
-
-      if (filename) {
-        const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
-          req.file.filename
-        }`;
-
+      if (req.file) {
+        const filePath = path.join(__dirname, "../uploads", req.file.filename);
         try {
-          // Try to delete the uploaded file
           await fs.promises.unlink(filePath);
-          console.log(`✅ Deleted file: ${filename}`);
+          console.log(`✅ Deleted file: ${req.file.filename}`);
         } catch (err) {
-          console.error(`⚠️ Failed to delete file (${filename}):`, err.message);
+          console.error(`⚠️ Failed to delete file:`, err.message);
         }
-      } else {
-        console.warn("⚠️ No file found to delete.");
       }
-
       return next(new ErrorHandler("User already exists", 400));
     }
-    // Save file to Cloudinary
-    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+
+    // ✅ Upload file to Cloudinary
+    const myCloud = await cloudinary.v2.uploader.upload(req.file.path, {
       folder: "avatars",
     });
-  
-       
-    const fileUrl = path.join("uploads", req.file.filename);
+
     const user = {
       name,
       email,
@@ -81,6 +68,7 @@ router.post("/create-user", upload.single("file"), async (req, resp, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
 
 // chat gpt code
 // router.post("/create-user", async (req, resp, next) => {

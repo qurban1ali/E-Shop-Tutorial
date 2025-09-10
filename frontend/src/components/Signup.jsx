@@ -18,30 +18,58 @@ const SignUp = () => {
     const file = e.target.files[0];
     setAvatar(file);
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const newForm = new FormData();
-    newForm.append("file", avatar);
-    newForm.append("name", name);
-    newForm.append("email", email);
-    newForm.append("password", password);
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const config = { headers: { "Content-Type": "multipart/form-data" } };
+//     const newForm = new FormData();
+//     newForm.append("file", avatar);
+//     newForm.append("name", name);
+//     newForm.append("email", email);
+//     newForm.append("password", password);
 
- await axios
-      .post(`${server}/user/create-user`, newForm, config)
-      .then((resp) => {
-        toast.success(resp.data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar();
-      })
-      .catch((err) => {
-  const errorMessage =
-    err.response?.data?.message || err.message || "Something went wrong.";
-  toast.error(errorMessage);
-    });
-  };
+//  await axios
+//       .post(`${server}/user/create-user`, newForm, config)
+//       .then((resp) => {
+//         toast.success(resp.data.message);
+//         setName("");
+//         setEmail("");
+//         setPassword("");
+//         setAvatar();
+//       })
+//       .catch((err) => {
+//   const errorMessage =
+//     err.response?.data?.message || err.message || "Something went wrong.";
+//   toast.error(errorMessage);
+//     });
+//   };
+  
+
+
+
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+  let avatarUrl = "";
+
+  if (avatar) {
+    const formData = new FormData();
+    formData.append("file", avatar);
+    formData.append("upload_preset", "YOUR_CLOUDINARY_PRESET");
+
+    const cloudRes = await axios.post(
+      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
+      formData
+    );
+    avatarUrl = cloudRes.data.secure_url;
+  }
+
+  await axios.post(`${server}/user/create-user`, {
+    name,
+    email,
+    password,
+    avatarUrl,
+  });
+};
+
 
   return (
     <div className=" min-h-screen bg-gray-100 flex flex-col justify-start pt-6 sm:px-6 lg:px-8">

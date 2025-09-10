@@ -14,45 +14,81 @@ const sendMail = require("../utils/sendMail");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
 // CREATE A USER
-router.post("/create-user", upload.single("file"), async (req, resp, next) => {
+// router.post("/create-user", upload.single("file"), async (req, resp, next) => {
+//   try {
+//     console.log("REQ.BODY:", req.body);
+//     console.log("REQ.FILE:", req.file);
+//     const filename = req.file?.filename;
+//     console.log("upload file", filename);
+
+//     const { name, email, password } = req.body;
+//     const userEmail = await User.findOne({ email });
+
+//     if (userEmail) {
+//       const filename = req.file?.filename;
+
+//       if (filename) {
+//         const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
+//           req.file.filename
+//         }`;
+
+//         try {
+//           // Try to delete the uploaded file
+//           await fs.promises.unlink(filePath);
+//           console.log(`✅ Deleted file: ${filename}`);
+//         } catch (err) {
+//           console.error(`⚠️ Failed to delete file (${filename}):`, err.message);
+//         }
+//       } else {
+//         console.warn("⚠️ No file found to delete.");
+//       }
+
+//       return next(new ErrorHandler("User already exists", 400));
+//     }
+
+//     const fileUrl = path.join("uploads", req.file.filename);
+//     const user = {
+//       name,
+//       email,
+//       password,
+//       avatar: {
+//         url: fileUrl,
+//       },
+//     };
+
+//     const activationToken = createActivationToken(user);
+//     const activationUrl = `https://e-shop-tutorial-juch.vercel.app/activation/${activationToken}`;
+
+//     await sendMail({
+//       email: user.email,
+//       subject: "Activate your account",
+//       message: `Hello ${user.name}, please click the link to activate your account: ${activationUrl}`,
+//     });
+
+//     resp.status(201).json({
+//       success: true,
+//       message: `Please check your email (${user.email}) to activate your account.`,
+//     });
+//   } catch (error) {
+//     return next(new ErrorHandler(error.message, 500));
+//   }
+// });
+
+router.post("/create-user", async (req, resp, next) => {
   try {
-    console.log("REQ.BODY:", req.body);
-    console.log("REQ.FILE:", req.file);
-    const filename = req.file?.filename;
-    console.log("upload file", filename);
+    const { name, email, password, avatarUrl } = req.body; // frontend should send avatar as base64 URL or Cloudinary URL
 
-    const { name, email, password } = req.body;
-    const userEmail = await User.findOne({ email });
-
-    if (userEmail) {
-      const filename = req.file?.filename;
-
-      if (filename) {
-        const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
-          req.file.filename
-        }`;
-
-        try {
-          // Try to delete the uploaded file
-          await fs.promises.unlink(filePath);
-          console.log(`✅ Deleted file: ${filename}`);
-        } catch (err) {
-          console.error(`⚠️ Failed to delete file (${filename}):`, err.message);
-        }
-      } else {
-        console.warn("⚠️ No file found to delete.");
-      }
-
+    const userExists = await User.findOne({ email });
+    if (userExists) {
       return next(new ErrorHandler("User already exists", 400));
     }
 
-    const fileUrl = path.join("uploads", req.file.filename);
     const user = {
       name,
       email,
       password,
       avatar: {
-        url: fileUrl,
+        url: avatarUrl || "default-avatar.png",
       },
     };
 
@@ -70,9 +106,11 @@ router.post("/create-user", upload.single("file"), async (req, resp, next) => {
       message: `Please check your email (${user.email}) to activate your account.`,
     });
   } catch (error) {
+    console.error(error);
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
 
 // CREATE ACTIVATION TOKEN
 const createActivationToken = (user) => {

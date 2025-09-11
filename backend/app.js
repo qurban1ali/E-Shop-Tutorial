@@ -20,8 +20,6 @@ app.use(
     credentials: true,
   })
 );
-// Optional explicit preflight handler
-app.options("*", cors());
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
@@ -57,6 +55,10 @@ app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
 app.use("/api/v2/withdraw", withdraw);
+
+// Handle favicon requests (to avoid noisy logs)
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) => res.status(204).end());
 
 // Catch-all for undefined API routes
 app.use((req, res) => {

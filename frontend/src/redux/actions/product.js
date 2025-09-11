@@ -5,17 +5,18 @@ import axios from "axios";
 
 export const createProduct = (newForm) => async (dispatch) => {
   try {
-    dispatch({
-      type: "productCreateRequest",
-    });
+    dispatch({ type: "productCreateRequest" });
 
-const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    };
 
-  const { data } = await axios.post(
-  `${server}/product/create-product`,
-  newForm,
-  { withCredentials: true }   // ✅ let Axios set the right Content-Type
-);
+    const { data } = await axios.post(
+      `${server}/product/create-product`,
+      newForm,
+      config   // ✅ now passing config correctly
+    );
 
     dispatch({
       type: "productCreateSuccess",
@@ -24,10 +25,11 @@ const config = { headers: { "Content-Type": "multipart/form-data" } };
   } catch (error) {
     dispatch({
       type: "productCreateFail",
-      payload: error.response?.data.message,
+      payload: error.response?.data?.message || "Something went wrong",
     });
   }
 };
+
 
 // get all products
 

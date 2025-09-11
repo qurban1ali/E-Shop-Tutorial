@@ -1,62 +1,69 @@
 const express = require("express");
-const router = express.Router();
-const Product = require("../model/product");
-const catchAsyncErrors = require("../middleware/catchAsyncError");
-const Shop = require("../model/shop");
-const { upload } = require("../multer");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
-const Order = require("../model/order");
-const catchAsyncError = require("../middleware/catchAsyncError");
+const { upload } = require("../multer");  // your multer config
+const cloudinary = require("cloudinary");
+const Product = require("../model/product");
+const Shop = require("../model/shop");
 
-// create product
-// create product
+const router = express.Router();
+
+// Create product
 router.post(
   "/create-product",
+  upload.array("images"), // ✅ matches FormData.append("images", file)
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const shopId = req.body.shopId;
+      const { shopId, name, description, category, tags, originalPrice, discountPrice, stock } = req.body;
+
+      // Validate shop
       const shop = await Shop.findById(shopId);
       if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
-      } else {
-        let images = [];
+      }
 
-        if (typeof req.body.images === "string") {
-          images.push(req.body.images);
-        } else {
-          images = req.body.images;
-        }
-      
-        const imagesLinks = [];
-      
-        for (let i = 0; i < images.length; i++) {
-          const result = await cloudinary.v2.uploader.upload(images[i], {
+      // ✅ Upload images to Cloudinary
+      let images = [];
+      if (req.files && req.files.length > 0) {
+        for (let file of req.files) {
+          const result = await cloudinary.v2.uploader.upload(file.path, {
             folder: "products",
           });
-      
-          imagesLinks.push({
+          images.push({
             public_id: result.public_id,
             url: result.secure_url,
           });
         }
-      
-        const productData = req.body;
-        productData.images = imagesLinks;
-        productData.shop = shop;
-
-        const product = await Product.create(productData);
-
-        res.status(201).json({
-          success: true,
-          product,
-        });
       }
+
+      // Build product object
+      const productData = {
+        name,
+        description,
+        category,
+        tags,
+        originalPrice,
+        discountPrice,
+        stock,
+        shopId,
+        shop,
+        images,
+      };
+
+      // Save in DB
+      const product = await Product.create(productData);
+
+      res.status(201).json({
+        success: true,
+        product,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+
+
 
   
 

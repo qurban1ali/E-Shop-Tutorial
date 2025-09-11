@@ -10,44 +10,54 @@ const Order = require("../model/order");
 const catchAsyncError = require("../middleware/catchAsyncError");
 
 // create product
+// create product
 router.post(
   "/create-product",
-  upload.array("images"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      console.log("BODY:", req.body);
-      console.log("FILES:", req.files);
-
       const shopId = req.body.shopId;
-      if (!shopId) {
-        return next(new ErrorHandler("Shop ID is required!", 400));
-      }
-
       const shop = await Shop.findById(shopId);
       if (!shop) {
-        return next(new ErrorHandler("Invalid Shop ID!", 400));
+        return next(new ErrorHandler("Shop Id is invalid!", 400));
+      } else {
+        let images = [];
+
+        if (typeof req.body.images === "string") {
+          images.push(req.body.images);
+        } else {
+          images = req.body.images;
+        }
+      
+        const imagesLinks = [];
+      
+        for (let i = 0; i < images.length; i++) {
+          const result = await cloudinary.v2.uploader.upload(images[i], {
+            folder: "products",
+          });
+      
+          imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+          });
+        }
+      
+        const productData = req.body;
+        productData.images = imagesLinks;
+        productData.shop = shop;
+
+        const product = await Product.create(productData);
+
+        res.status(201).json({
+          success: true,
+          product,
+        });
       }
-
-      const files = req.files || [];
-      const imageUrls = files.map((file) => `/uploads/${file.filename}`);
-
-      const productData = {
-        ...req.body,
-        images: imageUrls,
-        shop,
-      };
-
-      const product = await Product.create(productData);
-
-      res.status(201).json({
-        success: true,
-        product,
-      });
     } catch (error) {
-      return next(new ErrorHandler(error.message || "Product creation failed", 400));
+      return next(new ErrorHandler(error, 400));
     }
   })
 );
+
   
 
 // get all products of a shop

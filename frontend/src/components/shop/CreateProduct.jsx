@@ -51,27 +51,35 @@ const CreateProduct = () => {
   };
 
   // Submit product
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ // Submit product
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!images.length) {
-      return toast.error("Please upload at least one image!");
-    }
+  if (!images.length) {
+    return toast.error("Please upload at least one image!");
+  }
 
-    const productData = {
-      name,
-      description,
-      category,
-      tags,
-      originalPrice,
-      discountPrice,
-      stock,
-      shopId: seller._id,
-      images, // Only Cloudinary URLs
-    };
-
-    dispatch(createProduct(productData));
+  const productData = {
+    name,
+    description,
+    category,
+    tags,
+    originalPrice,
+    discountPrice,
+    stock,
+    shopId: seller._id,
+    images, // ✅ Cloudinary URLs
   };
+
+  try {
+    await dispatch(createProduct(productData)).unwrap(); // if using Redux Toolkit
+    toast.success("✅ Product created successfully!");
+    navigate("/dashboard");
+  } catch (err) {
+    toast.error(err?.message || "❌ Failed to create product");
+  }
+};
+
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[80vh] rounded-[4px] bg-white">

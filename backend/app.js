@@ -20,7 +20,7 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors());
+// app.options("*", cors());
 
 
 // ✅ Serve uploads folder correctly (outside backend)

@@ -61,9 +61,7 @@ app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.get("/favicon.png", (req, res) => res.status(204).end());
 
 // Catch-all for undefined API routes
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: "API route not found" });
-});
+
 
 // Global error handling
 app.use(ErrorHandler);

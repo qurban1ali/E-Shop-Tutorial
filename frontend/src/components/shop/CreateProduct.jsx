@@ -50,7 +50,6 @@ const CreateProduct = () => {
     }
   };
 
-  // Submit product
  // Submit product
 const handleSubmit = async (e) => {
   e.preventDefault();

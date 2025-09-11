@@ -20,6 +20,7 @@ app.use(
     credentials: true,
   })
 );
+// Optional explicit preflight handler
 app.options("*", cors());
 
 // ✅ Serve uploads folder correctly (outside backend)
@@ -58,7 +59,7 @@ app.use("/api/v2/order", order);
 app.use("/api/v2/withdraw", withdraw);
 
 // Catch-all for undefined API routes
-app.all(/.*/, (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ success: false, message: "API route not found" });
 });
 

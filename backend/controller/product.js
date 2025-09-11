@@ -1,14 +1,15 @@
 const express = require("express");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const ErrorHandler = require("../utils/ErrorHandler");
-const { upload } = require("../multer");  // your multer config
-const cloudinary = require("cloudinary");
-const Product = require("../model/product");
-const Shop = require("../model/shop");
-
 const router = express.Router();
+const Product = require("../model/product");
+const catchAsyncErrors = require("../middleware/catchAsyncError");
+const Shop = require("../model/shop");
+const { upload } = require("../multer");
+const ErrorHandler = require("../utils/ErrorHandler");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
+const Order = require("../model/order");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
-// Create product
+// create product
 router.post(
   "/create-product",
   upload.array("images"), // ✅ matches FormData.append("images", file)
@@ -62,8 +63,6 @@ router.post(
     }
   })
 );
-
-
 
   
 

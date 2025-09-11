@@ -20,7 +20,7 @@ app.use(
     credentials: true,
   })
 );
-app.options("*/", cors());
+app.options("*", cors());
 
 // ✅ Serve uploads folder correctly (outside backend)
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
@@ -58,7 +58,7 @@ app.use("/api/v2/order", order);
 app.use("/api/v2/withdraw", withdraw);
 
 // Catch-all for undefined API routes
-app.all("/*", (req, res) => {
+app.all(/.*/, (req, res) => {
   res.status(404).json({ success: false, message: "API route not found" });
 });
 

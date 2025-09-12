@@ -7,7 +7,7 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import {  server } from "../../server";
+import { server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
 import {
@@ -119,11 +119,18 @@ const ProductDetails = ({ data }) => {
             <div className=" w-full 800px:flex">
               {/* LEFT SIDE CONTENT */}
               <div className="w-full 800px:[50%]">
-                <img
-                  src={`${data && data.images[select].url}`}
-                  alt=""
-                  className="w-[80%]"
-                />
+                {data?.images?.length > 0 ? (
+                  <img
+                    src={data?.images?.[select]?.url || ""}
+                    alt={data?.name || "Product image"}
+                    className="w-[80%]"
+                  />
+                ) : (
+                  <div className="w-[80%] h-[300px] bg-gray-200 flex items-center justify-center">
+                    <span>No Image Available</span>
+                  </div>
+                )}
+
                 <div className="w-full flex">
                   {data?.images?.map((i, index) => (
                     <div
@@ -134,8 +141,8 @@ const ProductDetails = ({ data }) => {
                       onClick={() => setSelect(index)}
                     >
                       <img
-                        src={`${i.url}`}
-                        alt=""
+                        src={i?.url || ""}
+                        alt={`Thumbnail ${index + 1}`}
                         className="h-[200px] overflow-hidden mr-3 mt-3"
                       />
                     </div>
@@ -396,7 +403,7 @@ const ProductDetailsInfo = ({
                 Total Reviews:{" "}
                 <span className="font-[500]">{totalReviewsLength}</span>
               </h5>
-        <Link to={`/shop/${products.shopId}`}>
+              <Link to={`/shop/${products.shopId}`}>
                 <div className={`${styles.button} rounded !h-[40px] mt-3`}>
                   <h4 className="text-white font-semibold text-[18px]">
                     Visit Shop

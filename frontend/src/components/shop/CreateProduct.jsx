@@ -67,16 +67,20 @@ const handleSubmit = async (e) => {
     discountPrice,
     stock,
     shopId: seller._id,
-    images, // ✅ Cloudinary URLs
+    images,
   };
 
   try {
+    // Dispatch Redux thunk
+    await dispatch(createProduct(productData)).unwrap();
+
     toast.success("✅ Product created successfully!");
     navigate("/dashboard");
   } catch (err) {
     toast.error(err?.message || "❌ Failed to create product");
   }
 };
+
 
 
   return (

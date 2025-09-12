@@ -71,7 +71,6 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    await dispatch(createProduct(productData)).unwrap(); // if using Redux Toolkit
     toast.success("✅ Product created successfully!");
     navigate("/dashboard");
   } catch (err) {

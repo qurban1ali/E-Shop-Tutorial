@@ -127,11 +127,13 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         {/* iMAGE */}
-        <img
-          src={`${data?.images[0].url}`}
-          alt=""
-          className="w-[130px] h-min ml-2 mr-2 rounded-[5px] "
-        />
+
+       <img
+  src={data?.images?.[0]?.url || "/default.png"}
+  alt={data?.name || "Product image"}
+  className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+/>
+
         {/* DESCRIPYION */}
         <div className="pl-1">
           <h1 className="font-semibold">{data.name}</h1>

@@ -86,29 +86,33 @@ const CreateEvent = () => {
   };
 
   // Submit event (send URLs, not raw files)
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!images.length) {
-      return toast.error("Please upload at least one image!");
-    }
+  if (!images.length) {
+    return toast.error("Please upload at least one image!");
+  }
 
-    const eventData = {
-      name,
-      description,
-      category,
-      tags,
-      originalPrice,
-      discountPrice,
-      stock,
-      shopId: seller._id,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      images, // ✅ Cloudinary URLs
-    };
+  if (!startDate || !endDate) {
+    return toast.error("Please select start and end dates!");
+  }
 
-    dispatch(createevent(eventData));
+  const eventData = {
+    name,
+    description,
+    category,
+    tags,
+    originalPrice,
+    discountPrice,
+    stock,
+    shopId: seller._id,
+    Start_Date: startDate.toISOString(),   // ✅ match backend schema
+    Finish_Date: endDate.toISOString(),    // ✅ match backend schema
+    images, // array of strings
   };
+
+  dispatch(createevent(eventData));
+};
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[115vh] rounded-[4px] bg-white ">

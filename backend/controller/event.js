@@ -14,7 +14,7 @@ router.post(
   "/create-event",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { shopId, images, ...rest } = req.body;
+      const { shopId, images, Start_Date, Finish_Date, ...rest } = req.body;
 
       // Validate shop
       const shop = await Shop.findById(shopId);
@@ -22,12 +22,25 @@ router.post(
         return next(new ErrorHandler("Shop Id is invalid!", 400));
       }
 
-      // ✅ images already uploaded to Cloudinary from frontend
+      if (!images || images.length === 0) {
+        return next(
+          new ErrorHandler("Please provide at least one image!", 400)
+        );
+      }
+
+      if (!Start_Date || !Finish_Date) {
+        return next(
+          new ErrorHandler("Start_Date and Finish_Date are required!", 400)
+        );
+      }
+
       const eventData = {
         ...rest,
-        images: images.map((url) => ({ url })), // same structure as products
+        images, // ✅ array of strings from frontend Cloudinary URLs
         shop,
         shopId,
+        Start_Date, // match your schema
+        Finish_Date, // match your schema
       };
 
       const event = await Event.create(eventData);
@@ -41,7 +54,6 @@ router.post(
     }
   })
 );
-
 
 // get all events
 router.get("/get-all-events", async (req, res, next) => {
@@ -95,10 +107,6 @@ router.delete(
   })
 );
 
-
-
-
-
 // all events -- for admin
 router.get(
   "/admin-all-events",
@@ -118,7 +126,5 @@ router.get(
     }
   })
 );
-
-
 
 module.exports = router;

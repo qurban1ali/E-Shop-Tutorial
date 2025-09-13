@@ -15,48 +15,46 @@ const SignUp = () => {
   const [avatar, setAvatar] = useState(null);
 
   const handleFileInputChange = (e) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setAvatar(reader.result);
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
+    const file = e.target.files[0];
+    setAvatar(file);
   };
+
+
+
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    let avatarUrl = "";
+  e.preventDefault();
+  let avatarUrl = "";
 
-    try {
-      // ✅ Upload avatar to Cloudinary first
-      if (avatar) {
-        const formData = new FormData();
-        formData.append("file", avatar);
-        formData.append("upload_preset", "ecommrence"); // create this preset in Cloudinary
+  try {
+    // ✅ Upload avatar to Cloudinary first
+    if (avatar) {
+      const formData = new FormData();
+      formData.append("file", avatar);
+      formData.append("upload_preset", "ecommrence"); // create this preset in Cloudinary
 
-        const cloudRes = await axios.post(
-          "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
-          formData
-        );
-        avatarUrl = cloudRes.data.secure_url;
-      }
-
-      // ✅ Call backend to create user
-      const { data } = await axios.post(`${server}/user/create-user`, {
-        name,
-        email,
-        password,
-        avatarUrl,
-      });
-
-      toast.success(data.message);
-    } catch (err) {
-      toast.error(err.response?.data?.message);
+      const cloudRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+        formData
+      );
+      avatarUrl = cloudRes.data.secure_url;
     }
-  };
+
+    // ✅ Call backend to create user
+    const { data } = await axios.post(`${server}/user/create-user`, {
+      name,
+      email,
+      password,
+      avatarUrl,
+    });
+
+    toast.success(data.message);
+  } catch (err) {
+    toast.error(err.response?.data?.message);
+  }
+};
+
+
 
   return (
     <div className=" min-h-screen bg-gray-100 flex flex-col justify-start pt-6 sm:px-6 lg:px-8">
@@ -155,7 +153,7 @@ const SignUp = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={avatar}
+                      src={URL.createObjectURL(avatar)}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />

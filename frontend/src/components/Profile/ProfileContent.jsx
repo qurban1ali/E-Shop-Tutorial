@@ -56,30 +56,32 @@ const ProfileContent = ({ active }) => {
   };
 
   const handleImage = async (e) => {
-    const file = e.target.files?.[0];
-    setAvatar(file);
+    const reader = new FileReader();
 
-    const formData = new FormData();
-    formData.append("image", file);
-    // formData.append("avatar", file);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/user/update-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            dispatch(loadUser());
+            toast.success("avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error);
+          });
+      }
+    };
 
-
-    await axios
-      .put(`${server}/user/update-avatar`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          //  headers: { "Content-Type": "multipart/form-data" }
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-      dispatch(loadUser())
-      toast.success("avatar updated successfully!")
-      })
-      .catch((error) => {
-       toast.error(error.response?.data?.message || "Failed to update avatar");
-      });
+    reader.readAsDataURL(e.target.files[0]);
   };
+
   return (
     <div className="w-full ">
       {/* PROFILE UPDATE CHANGE */}
@@ -88,9 +90,9 @@ const ProfileContent = ({ active }) => {
           <div className=" flex justify-center w-full ">
             <div className="relative">
               <img
-                src={fullAvatarUrl || "/default-avatar.png"}
-                className="w-36 h-36 border-green-700 rounded-full border-3"
-                alt="User Avatar"
+                src={`${user?.avatar?.url}`}
+                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
+                alt=""
               />
               <div className="w-[30px] h-[30px]  bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-1 right-1">
                 <input

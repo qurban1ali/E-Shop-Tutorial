@@ -174,6 +174,48 @@ router.put(
   })
 );
 
+   // ---------------- UPDATE USER ADDRESS ----------------
+router.put(
+  "/update-user-addresses",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    if (!user) return next(new ErrorHandler("User not found", 404));
+
+    const { country, city, address1, address2, zipCode, addressType } = req.body;
+
+    user.addresses.push({ country, city, address1, address2, zipCode, addressType });
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      successMessage: "Address added successfully!",
+      user,
+    });
+  })
+);
+
+// ---------------- DELETE USER ADDRESS ----------------
+router.delete(
+  "/delete-user-address/:id",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    if (!user) return next(new ErrorHandler("User not found", 404));
+
+    user.addresses = user.addresses.filter(
+      (address) => address._id.toString() !== req.params.id
+    );
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      successMessage: "Address deleted successfully!",
+      user,
+    });
+  })
+);
+
 // ---------------- UPDATE PASSWORD ----------------
 router.put(
   "/update-user-password",

@@ -127,7 +127,7 @@ const ProductDetails = ({ data }) => {
               <div className="w-full 800px:w-[50%]">
                 {data?.images?.length > 0 ? (
                   <img
-                    src={data?.images?.[select]?.url || ""}
+                    src={data?.images?.[select] || ""}
                     alt={data?.name || "Product image"}
                     className="w-[80%] object-contain"
                   />
@@ -148,7 +148,7 @@ const ProductDetails = ({ data }) => {
                       onClick={() => setSelect(index)}
                     >
                       <img
-                        src={img?.url || ""}
+                        src={img || ""}
                         alt={`Thumbnail ${index + 1}`}
                         className="h-[100px] w-[100px] object-cover rounded"
                       />

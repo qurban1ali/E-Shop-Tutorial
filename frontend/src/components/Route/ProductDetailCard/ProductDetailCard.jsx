@@ -10,12 +10,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
-import { addToWishlist, removeFromWishlist } from "../../../redux/actions/wishlist";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../../redux/actions/wishlist";
 // import e from "express";
 
 const ProductDetailCard = ({ setOpen, data }) => {
-  const {cart} = useSelector((state) => state.cart);
-    const {wishlist} = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
@@ -36,33 +39,32 @@ const ProductDetailCard = ({ setOpen, data }) => {
     if (isItemExist) {
       toast.error("Item already in cart");
     } else {
-    if(data.stock < count) {
-      toast.error("Product Stock limited")
-    }else {
-      const cartData = {...data, qty: count};
-      dispatch(addToCart(cartData));
-      toast.success("Item added to cart successfully");
-    }
-    }
-
-  }
-
-    useEffect(() => {
-      if (wishlist && wishlist.find((i) => i._id === data._id)) {
-        setClick(true);
+      if (data.stock < count) {
+        toast.error("Product Stock limited");
       } else {
-        setClick(false);
+        const cartData = { ...data, qty: count };
+        dispatch(addToCart(cartData));
+        toast.success("Item added to cart successfully");
       }
-    }, [wishlist]);
-  
-    const removeFromWishlistHandler = (data) => {
-      setClick(!click);
-      dispatch(removeFromWishlist(data));
-    };
-    const addToWishlistHandler = (data) => {
-      setClick(!click);
-      dispatch(addToWishlist(data));
-    };
+    }
+  };
+
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [wishlist]);
+
+  const removeFromWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(removeFromWishlist(data));
+  };
+  const addToWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(addToWishlist(data));
+  };
   return (
     <div className="bg-white">
       {data ? (
@@ -76,7 +78,15 @@ const ProductDetailCard = ({ setOpen, data }) => {
             <div className="block w-[100%] 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 {/* <img src={data.image_Url[0].url} alt="" /> */}
-                <img src={`${data.images[0].url}`} alt="" />
+                <img
+                  src={
+                    data?.images?.[0]?.url ||
+                    data?.images?.[0] ||
+                    "/placeholder.png"
+                  }
+                  alt={data?.name || "Product"}
+                  className="w-full object-contain"
+                />
                 <div className="flex">
                   <img
                     src={`${data?.shop?.avatar.url}`}
@@ -158,11 +168,9 @@ const ProductDetailCard = ({ setOpen, data }) => {
                 <div
                   className={`${styles.button} mt-6  h-11 flex items-center`}
                   onClick={() => addToCartHandler(data._id)}
-                  
                 >
                   <span className="text-[#fff] flex items-center">
-                    Add to cart <AiOutlineShoppingCart
-                       className="ml-1 mt-1" />
+                    Add to cart <AiOutlineShoppingCart className="ml-1 mt-1" />
                   </span>
                 </div>
               </div>

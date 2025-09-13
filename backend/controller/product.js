@@ -8,14 +8,26 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 const Order = require("../model/order");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const cloudinary = require("cloudinary"); // ✅ IMPORT
+
+
 
 // create product
 router.post(
   "/create-product",
-  upload.array("images"), // ✅ matches FormData.append("images", file)
+  upload.array("images"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { shopId, name, description, category, tags, originalPrice, discountPrice, stock } = req.body;
+      const {
+        shopId,
+        name,
+        description,
+        category,
+        tags,
+        originalPrice,
+        discountPrice,
+        stock,
+      } = req.body;
 
       // Validate shop
       const shop = await Shop.findById(shopId);
@@ -30,14 +42,16 @@ router.post(
           const result = await cloudinary.v2.uploader.upload(file.path, {
             folder: "products",
           });
+
           images.push({
             public_id: result.public_id,
-            url: result.secure_url,
+            url: result.secure_url, // ✅ use secure_url
           });
+
+          fs.unlinkSync(file.path); // ✅ delete from local uploads
         }
       }
 
-      // Build product object
       const productData = {
         name,
         description,
@@ -51,7 +65,6 @@ router.post(
         images,
       };
 
-      // Save in DB
       const product = await Product.create(productData);
 
       res.status(201).json({

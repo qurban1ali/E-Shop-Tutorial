@@ -31,7 +31,7 @@ router.post(
       stock,
       shopId,
       shop,
-      images: images.map((url) => ({ url })),
+images: images.map((img) => (typeof img === "string" ? img : img.url)),
     });
 
     res.status(201).json({ success: true, product });

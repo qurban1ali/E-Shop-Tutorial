@@ -20,16 +20,14 @@ import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
-    const { isSeller } = useSelector((state) => state.seller);
+  const { isSeller } = useSelector((state) => state.seller);
   const { allProducts } = useSelector((state) => state.products);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
-    const avatarUrl = user?.avatar?.url;
-  const fullAvatarUrl =
-    avatarUrl && !avatarUrl.startsWith("http")
-      ? `${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl.url}`
-      : avatarUrl || Avatar;
+  // ✅ Fix avatar logic
+  const fullAvatarUrl = user?.avatar?.url || Avatar;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -37,7 +35,6 @@ const Header = ({ activeHeading }) => {
   const [openCard, setOpenCard] = useState(false);
   const [openwishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
-  // console.log("User from Redux:", user);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -56,7 +53,6 @@ const Header = ({ activeHeading }) => {
     const handleScroll = () => {
       setActive(window.scrollY > 70);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -66,17 +62,15 @@ const Header = ({ activeHeading }) => {
       {/* FIRST HEADER */}
       <div className={`${styles.section}`}>
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
-          {/* HEADER LOGO */}
-          <div>
-            <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-              />
-            </Link>
-          </div>
+          {/* LOGO */}
+          <Link to="/">
+            <img
+              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+              alt="Logo"
+            />
+          </Link>
 
-          {/* SEARCH BOX */}
+          {/* SEARCH */}
           <div className="w-[50%] relative">
             <input
               type="text"
@@ -90,30 +84,29 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {searchData?.length > 0 && (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                {searchData.map((i, index) => {
-                    return (
-                    <Link key={index} to={`/product/${i._id}`}>
-                      <div className="w-full flex items-start py-3">
-                        <img
-                          src={`${i.images[0].url}`}
-                          className="w-[40px] h-[40px] mr-[10px]"
-                          alt=""
-                        />
-                        <h1>{i.name}</h1>
-                      </div>
-                    </Link>
-                  );
-                })}
+              <div className="absolute min-h-[30vh] w-full bg-slate-50 shadow-sm-2 z-[9] p-4">
+                {searchData.map((i, index) => (
+                  <Link key={index} to={`/product/${i._id}`}>
+                    <div className="w-full flex items-center py-3">
+                      <img
+                        src={i.images?.[0]?.url}
+                        className="w-[40px] h-[40px] mr-[10px] object-cover"
+                        alt={i.name}
+                      />
+                      <h1>{i.name}</h1>
+                    </div>
+                  </Link>
+                ))}
               </div>
             )}
           </div>
 
           {/* BECOME SELLER */}
           <div className={`${styles.button}`}>
-            <Link to={`${isSeller ? '/dashboard' : '/shop-create'}`}>
+            <Link to={isSeller ? "/dashboard" : "/shop-create"}>
               <h1 className="text-[#fff] flex items-center">
-               {isSeller ? "Go Dashboard" : "Become Seller"} <IoIosArrowForward className="ml-1 mt-1" />
+                {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
+                <IoIosArrowForward className="ml-1 mt-1" />
               </h1>
             </Link>
           </div>
@@ -132,14 +125,14 @@ const Header = ({ activeHeading }) => {
           {/* CATEGORIES */}
           <div
             onClick={() => setDropDown(!dropDown)}
-            className="relative h-[50px] mt-[10px] w-[250px] hidden 900px:block bg-white rounded-t-md"
+            className="relative h-[50px] mt-[10px] w-[250px] hidden 900px:block bg-white rounded-t-md cursor-pointer"
           >
             <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
-            <button className="h-[100%] w-[70%] justify-between pl-5 items-center bg-white font-sanstext-lg font-[500] select-none rounded-t-md">
+            <button className="h-full w-[70%] pl-5 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
               All Categories
             </button>
             <IoIosArrowDown
-              className="absolute right-2 top-4 cursor-pointer"
+              className="absolute right-2 top-4"
               onClick={() => setDropDown(!dropDown)}
             />
             {dropDown && (
@@ -150,131 +143,119 @@ const Header = ({ activeHeading }) => {
             )}
           </div>
 
-          {/* NAV ITEMS */}
-          <div className={`${styles.normalFlex}`}>
-            <Navbar active={activeHeading} />
-          </div>
+          {/* NAVBAR */}
+          <Navbar active={activeHeading} />
 
-          {/* FAVOURITE, CART, PROFILE */}
-          <div className="flex">
-            {/* FAVOURITE ICON */}
-            <div className={`${styles.normalFlex}`}>
-              <div
-                className="relative cursor-pointer mr-[15px]"
-                onClick={() => setOpenWishlist(true)}
-              >
-                <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-                  {wishlist && wishlist.length}
-                </span>
-              </div>
+          {/* RIGHT ICONS */}
+          <div className="flex items-center">
+            {/* WISHLIST */}
+            <div
+              className="relative cursor-pointer mr-[15px]"
+              onClick={() => setOpenWishlist(true)}
+            >
+              <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] flex items-center justify-center">
+                {wishlist?.length}
+              </span>
             </div>
-            {/* FAVOURITE POPUT */}
-            {openwishlist ? <Wish setOpenWishlist={setOpenWishlist} /> : null}
+            {openwishlist && <Wish setOpenWishlist={setOpenWishlist} />}
 
-            {/* CART ICON */}
-            <div className={`${styles.normalFlex}`}>
-              <div
-                className="relative cursor-pointer mr-[15px]"
-                onClick={() => setOpenCard(true)}
-              >
-                <AiOutlineShoppingCart
-                  size={30}
-                  color="rgb(255 255 255 / 83%)"
-                />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-                  {cart && cart.length}
-                </span>
-              </div>
+            {/* CART */}
+            <div
+              className="relative cursor-pointer mr-[15px]"
+              onClick={() => setOpenCard(true)}
+            >
+              <AiOutlineShoppingCart size={30} color="rgb(255 255 255 / 83%)" />
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] flex items-center justify-center">
+                {cart?.length}
+              </span>
             </div>
-            {/* CART POPUT */}
-            {openCard ? <Cart setOpenCard={setOpenCard} /> : null}
+            {openCard && <Cart setOpenCard={setOpenCard} />}
 
-            {/* PROFILE ICON */}
-            <div className={`${styles.normalFlex}`}>
-              <div className="relative cursor-pointer mr-[15px]">
-                {isAuthenticated ? (
-                  <Link to="/profile">
-                    <img
-                      src={fullAvatarUrl}
-                      onError={(e) => {
-                        e.target.src = Avatar;
-                      }}
-                      className="w-10 h-10 border-green-700 rounded-full border-3"
-                      alt="User Avatar"
-                    />
-                  </Link>
-                ) : (
-                  <Link to="/login">
-                    <CgProfile size={30} color="rgb(255 255 255 / 83%)" />
-                  </Link>
-                )}
-              </div>
+            {/* PROFILE */}
+            <div className="relative cursor-pointer mr-[15px]">
+              {isAuthenticated ? (
+                <Link to="/profile">
+                  <img
+                    src={fullAvatarUrl}
+                    onError={(e) => (e.target.src = Avatar)}
+                    className="w-10 h-10 border-green-700 rounded-full border-2 object-cover"
+                    alt="User Avatar"
+                  />
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <CgProfile size={30} color="rgb(255 255 255 / 83%)" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* MOBILE SCREEN HEADER */}
-
+      {/* MOBILE HEADER */}
       <div
-        className={`
-        ${active === true ? "shadow-sm fixed top-0 left-0 z-10" : null}
-        w-full h-[70px]  fixed bg-[#fff] z-50 top-0 left-0 shadowkm-sm 800px:hidden`}
+        className={`${
+          active ? "shadow-sm fixed top-0 left-0 z-10" : ""
+        } w-full h-[70px] fixed bg-[#fff] z-50 800px:hidden`}
       >
         <div className="w-full flex items-center justify-between">
-          <div>
-            <BiMenuAltLeft
-              size={40}
-              className="ml-4"
-              onClick={() => setOpen(true)}
+          <BiMenuAltLeft
+            size={40}
+            className="ml-4"
+            onClick={() => setOpen(true)}
+          />
+
+          {/* LOGO */}
+          <Link to="/">
+            <img
+              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+              alt="Logo"
+              className="mt-3 cursor-pointer"
             />
-          </div>
-          {/* HEADER LOGO */}
-          <div>
-            <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-                className="mt-3 cursor-pointer"
-              />
-            </Link>
-          </div>
-          <div className="relative mr-[20px] "
-          onClick={() => setOpenCard(true)}>
+          </Link>
+
+          {/* CART ICON */}
+          <div
+            className="relative mr-[20px]"
+            onClick={() => setOpenCard(true)}
+          >
             <AiOutlineShoppingCart size={40} />
-            <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-              {cart && cart.length}
-            </span>{" "}
+            <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] flex items-center justify-center">
+              {cart?.length}
+            </span>
           </div>
-           {/* CART POPUT */}
-            {openCard ? <Cart setOpenCard={setOpenCard} /> : null}
-               {/* FAVOURITE POPUT */}
-            {openwishlist ? <Wish setOpenWishlist={setOpenWishlist} /> : null}
-            
+          {openCard && <Cart setOpenCard={setOpenCard} />}
+          {openwishlist && <Wish setOpenWishlist={setOpenWishlist} />}
         </div>
 
-        {/* HEADER SIDE BAR */}
+        {/* SIDEBAR */}
         {open && (
-          <div className="flxed w-full bg-[#0000005f] z-20 h-full top-0 left-0 ">
-            <div className="fixed w-[70%] bg-white h-screen top-0 left-0 z-10">
-              <div className="w-full justify-between flex pr-3">
-                <div>
-                  <div className="relative mr-[15px]" onClick={() => setOpenWishlist(true) || setOpen(false)}  >
-                    <AiOutlineHeart size={40} className="mt-5 ml-3" />
-                    <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-                      {wishlist && wishlist.length}
-                    </span>
-                  </div>
+          <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
+            <div className="fixed w-[70%] bg-white h-screen top-0 left-0 z-30">
+              <div className="flex justify-between items-center pr-3">
+                {/* Wishlist Icon */}
+                <div
+                  className="relative mr-[15px] mt-5 ml-3 cursor-pointer"
+                  onClick={() => {
+                    setOpenWishlist(true);
+                    setOpen(false);
+                  }}
+                >
+                  <AiOutlineHeart size={40} />
+                  <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] flex items-center justify-center">
+                    {wishlist?.length}
+                  </span>
                 </div>
                 <RxCross1
                   size={40}
-                  className="ml-4 mt-5"
+                  className="mt-5 cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
               </div>
 
-              <div className="my-8  w-[92%] m-auto h-10">
+              {/* Search */}
+              <div className="my-8 w-[92%] m-auto">
                 <input
                   type="search"
                   placeholder="Search products..."
@@ -283,54 +264,46 @@ const Header = ({ activeHeading }) => {
                   onChange={handleSearchChange}
                 />
                 {searchData?.length > 0 && (
-                  <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                    {searchData.map((i, index) => {
-                      const product_name = i.name.replace(/\s+/g, "-");
-                      return (
-                        <Link key={index} to={`/product/${product_name}`}>
-                          <div className="w-full flex items-start py-3">
-                            <img
-                              src={i.image_Url[0].url}
-                              className="w-[40px] h-[40px] mr-[10px]"
-                              alt=""
-                            />
-                            <h1>{i.name}</h1>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                  <div className="absolute min-h-[30vh] w-full bg-slate-50 shadow-sm-2 z-[9] p-4">
+                    {searchData.map((i, index) => (
+                      <Link key={index} to={`/product/${i._id}`}>
+                        <div className="w-full flex items-center py-3">
+                          <img
+                            src={i.images?.[0]?.url}
+                            className="w-[40px] h-[40px] mr-[10px] object-cover"
+                            alt={i.name}
+                          />
+                          <h1>{i.name}</h1>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 )}
               </div>
 
               <Navbar active={activeHeading} />
+
               <div className={`${styles.button} ml-3 !rounded-[4px]`}>
                 <Link to="/shop-create">
                   <h1 className="text-[#fff] flex items-center">
                     Become Seller <IoIosArrowForward className="ml-1 mt-1" />
                   </h1>
                 </Link>
-                <br />
-                <br />
-                <br />
               </div>
-              <div className="flex w-full justify-center">
+
+              <div className="flex w-full justify-center mt-10">
                 {isAuthenticated ? (
-                  <div className="mt-10">
-                    <Link to="/profile">
-                      <img
-                        src={fullAvatarUrl}
-                        onError={(e) => {
-                          e.target.src = Avatar;
-                        }}
-                        className="w-16 h-16 border-green-700 rounded-full border-3"
-                        alt="User Avatar"
-                      />
-                    </Link>
-                  </div>
+                  <Link to="/profile">
+                    <img
+                      src={fullAvatarUrl}
+                      onError={(e) => (e.target.src = Avatar)}
+                      className="w-16 h-16 border-green-700 rounded-full border-2 object-cover"
+                      alt="User Avatar"
+                    />
+                  </Link>
                 ) : (
                   <>
-                    <Link to="/Login" className="text-xl pr-2 text-[#000000b7]">
+                    <Link to="/login" className="text-xl pr-2 text-[#000000b7]">
                       Login/
                     </Link>
                     <Link to="/sign-up" className="text-xl text-[#000000b7]">

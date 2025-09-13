@@ -4,33 +4,27 @@ import styles from "../../styles/style";
 
 const DropDown = ({ categoriesData, setDropDown }) => {
   const navigate = useNavigate();
+
   const submitHandler = (i) => {
     navigate(`/products?category=${i.title}`);
-    setDropDown(false);
-    window.location.reload();
+    setDropDown(false); // ✅ Close dropdown only
   };
 
   return (
-    <div className="pb-4 w-[250px] bg-white absolute z-30 rounded-b-md shadow-sm">
+    <div className="absolute top-full left-0 w-[250px] bg-white z-30 rounded-b-md shadow-md">
       {categoriesData &&
         categoriesData.map((i, index) => (
           <div
             key={index}
-            className={`${styles.normalFlex}`}
+            className={`flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${styles.normalFlex}`}
             onClick={() => submitHandler(i)}
           >
             <img
               src={i.image_Url}
-              alt=""
-              style={{
-                width: "25px",
-                height: "25px",
-                objectFit: "contain",
-                marginLeft: "10px",
-                userSelect: "none",
-              }}
+              alt={i.title}
+              className="w-[25px] h-[25px] object-contain select-none"
             />
-            <h3 className="m-2 cursor-pointer select-none">{i.title}</h3>
+            <h3 className="text-sm font-medium select-none">{i.title}</h3>
           </div>
         ))}
     </div>

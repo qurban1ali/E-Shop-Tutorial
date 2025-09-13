@@ -39,7 +39,8 @@ const Categories = () => {
               return (
                 <div
                   className="w-full h-[100px] flex items-center justify-between cursor-pointer overflow-hidden"
-                  key={i.id}
+                  // key={i.id}
+                  key={i.title}
                   onClick={() => handleSubmit(i)}
                 >
                   <h5 className={`text-[18px] leading-[1.3]`}>{i.title}</h5>

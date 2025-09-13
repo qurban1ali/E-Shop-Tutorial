@@ -60,12 +60,15 @@ const ProfileContent = ({ active }) => {
     setAvatar(file);
 
     const formData = new FormData();
-    formData.append("image", file);
+    // formData.append("image", file);
+    formData.append("avatar", file);
+
 
     await axios
       .put(`${server}/user/update-avatar`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
+           headers: { "Content-Type": "multipart/form-data" }
         },
         withCredentials: true,
       })
@@ -74,7 +77,7 @@ const ProfileContent = ({ active }) => {
       toast.success("avatar updated successfully!")
       })
       .catch((error) => {
-        toast.error(error);
+       toast.error(error.response?.data?.message || "Failed to update avatar");
       });
   };
   return (
@@ -85,7 +88,7 @@ const ProfileContent = ({ active }) => {
           <div className=" flex justify-center w-full ">
             <div className="relative">
               <img
-                src={fullAvatarUrl}
+                src={fullAvatarUrl || "/default-avatar.png"}
                 className="w-36 h-36 border-green-700 rounded-full border-3"
                 alt="User Avatar"
               />
@@ -261,17 +264,12 @@ const AllOrders = () => {
     },
   ];
 
-  const rows = [];
-
-  orders &&
-    orders.forEach((item) => {
-      rows.push({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: "US$" + item.totalPrice,
-        status: item.status,
-      });
-    });
+   const rows = orders?.map((item) => ({
+  id: item._id,
+   itemsQty: item.cart.length,
+   total: "US$" + item.totalPrice,
+   status: item.status,
+ }));
     // console.log(orders)
   return (
     <div className="pl-8 pt-1">
@@ -429,17 +427,13 @@ const TrackOrder = () => {
     },
   ];
 
-  const rows = [];
-
-  orders &&
-    orders.forEach((item) => {
-      rows.push({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: "US$" + item.totalPrice,
-        status: item.status,
-      });
-    });
+  const rows = orders?.map((item) => ({
+  id: item._id,
+   itemsQty: item.cart.length,
+   total: "US$" + item.totalPrice,
+   status: item.status,
+ }));
+    
   return (
     <div className="pl-8 pt-1">
       <DataGrid

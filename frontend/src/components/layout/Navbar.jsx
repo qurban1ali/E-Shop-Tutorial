@@ -5,21 +5,22 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ active }) => {
   return (
-    <div className={`block 800px:${styles.normalFlex}`}>
-      {navItems &&
-        navItems.map((i, index) => (
-          <div className="flex" key={index}>
-            <Link
-              to={i.url}
-              className={`${
-                active === index + 1 ? "text-[#17dd1f]" : "text-black 800px:text-[#fff]"
-            } pb-[30px]  800px:pb-0 px-2 mx-4 font-[500] cursor-pointer `}
-            >
-              {i.title}
-            </Link>
-          </div>
-        ))}
-    </div>
+    <nav className={`block 800px:${styles.normalFlex}`}>
+      {navItems?.map((item, index) => (
+        <div className="flex" key={index}>
+          <Link
+            to={item.url}
+            className={`${
+              active === index + 1
+                ? "text-[#17dd1f] font-semibold"
+                : "text-black 800px:text-white"
+            } pb-[15px] 800px:pb-0 px-3 mx-2 transition-colors duration-200 hover:text-[#17dd1f]`}
+          >
+            {item.title}
+          </Link>
+        </div>
+      ))}
+    </nav>
   );
 };
 

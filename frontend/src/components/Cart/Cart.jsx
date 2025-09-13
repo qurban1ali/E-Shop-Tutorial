@@ -130,7 +130,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
 
       {/* Product Image */}
       <img
-        src={data?.images?.[0]?.url || "/default.png"}
+        src={data?.images?.[0] || "/default.png"}
         alt={data?.name || "Product"}
         className="w-[80px] h-[80px] object-cover rounded-md"
       />

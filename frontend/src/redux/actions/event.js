@@ -3,7 +3,7 @@ import axios from "axios";
 
 // create event
 
-export const createevent = (newForm) => async (dispatch) => {
+export const createevent = (newForm,eventData) => async (dispatch) => {
   try {
     dispatch({ type: "eventCreateRequest" });
 
@@ -12,6 +12,7 @@ export const createevent = (newForm) => async (dispatch) => {
     const { data } = await axios.post(
       `${server}/event/create-event`,
       newForm,
+      eventData,
       config
     );
 

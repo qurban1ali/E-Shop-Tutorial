@@ -22,65 +22,61 @@ const CreateProduct = () => {
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
 
- // Upload images to Cloudinary
-const handleImageChange = async (e) => {
-  const files = Array.from(e.target.files);
+  // Upload images to Cloudinary
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
 
-  for (let file of files) {
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "ecommrence"); // must exist in Cloudinary
-    data.append("cloud_name", "du6xqru9r");
+    for (let file of files) {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "ecommrence"); // must exist in Cloudinary
+      data.append("cloud_name", "du6xqru9r");
 
-    try {
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
-        data
-      );
+      try {
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+          data
+        );
 
-      if (res.data.secure_url) {
-        setImages((prev) => [...prev, res.data.secure_url]);
-      } else {
-        toast.error("Image upload failed!");
+        if (res.data.secure_url) {
+          setImages((prev) => [...prev, res.data.secure_url]);
+        } else {
+          toast.error("Image upload failed!");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Error uploading image");
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error uploading image");
     }
-  }
-};
-
-// Submit product
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!images.length) {
-    return toast.error("Please upload at least one image!");
-  }
-
-  const productData = {
-    name,
-    description,
-    category,
-    tags,
-    originalPrice,
-    discountPrice,
-    stock,
-    shopId: seller._id,
-    images, // already Cloudinary URLs
   };
 
-  try {
-    await dispatch(createProduct(productData));
-    toast.success("✅ Product created successfully!");
-    navigate("/dashboard");
-  } catch (err) {
-    toast.error(err?.message || "❌ Failed to create product");
-  }
-};
+  // Submit product
+  // Frontend handleSubmit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    if (!images.length) return toast.error("Please upload at least one image!");
 
+    const productData = {
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      shopId: seller._id,
+      images, // these are already Cloudinary URLs
+    };
 
+    try {
+      await dispatch(createProduct(productData)); // send JSON
+      toast.success("✅ Product created successfully!");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err?.message || "❌ Failed to create product");
+    }
+  };
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[80vh] rounded-[4px] bg-white">

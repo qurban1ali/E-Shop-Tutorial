@@ -16,49 +16,28 @@ const cloudinary = require("cloudinary"); // ✅ IMPORT
 router.post(
   "/create-product",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const {
-        shopId,
-        name,
-        description,
-        category,
-        tags,
-        originalPrice,
-        discountPrice,
-        stock,
-        images, // directly from frontend (secure_urls)
-      } = req.body;
+    const { shopId, name, description, category, tags, originalPrice, discountPrice, stock, images } = req.body;
 
-      // Validate shop
-      const shop = await Shop.findById(shopId);
-      if (!shop) {
-        return next(new ErrorHandler("Shop Id is invalid!", 400));
-      }
+    const shop = await Shop.findById(shopId);
+    if (!shop) return next(new ErrorHandler("Shop Id is invalid!", 400));
 
-      const productData = {
-        name,
-        description,
-        category,
-        tags,
-        originalPrice,
-        discountPrice,
-        stock,
-        shopId,
-        shop,
-        images: images.map((url) => ({ url })), // keep same structure
-      };
+    const product = await Product.create({
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      shopId,
+      shop,
+      images: images.map((url) => ({ url })),
+    });
 
-      const product = await Product.create(productData);
-
-      res.status(201).json({
-        success: true,
-        product,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
-    }
+    res.status(201).json({ success: true, product });
   })
 );
+
 
 
   

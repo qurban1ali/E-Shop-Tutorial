@@ -60,15 +60,15 @@ const ProfileContent = ({ active }) => {
     setAvatar(file);
 
     const formData = new FormData();
-    // formData.append("image", file);
-    formData.append("avatar", file);
+    formData.append("image", file);
+    // formData.append("avatar", file);
 
 
     await axios
       .put(`${server}/user/update-avatar`, formData, {
         headers: {
-          // "Content-Type": "multipart/form-data",
-           headers: { "Content-Type": "multipart/form-data" }
+          "Content-Type": "multipart/form-data",
+          //  headers: { "Content-Type": "multipart/form-data" }
         },
         withCredentials: true,
       })

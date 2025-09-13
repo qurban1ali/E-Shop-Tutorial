@@ -89,7 +89,7 @@ const Header = ({ activeHeading }) => {
                   <Link key={index} to={`/product/${i._id}`}>
                     <div className="w-full flex items-center py-3">
                       <img
-                        src={i.images?.[0]?.url}
+                        src={i.images?.[0]}
                         className="w-[40px] h-[40px] mr-[10px] object-cover"
                         alt={i.name}
                       />
@@ -269,7 +269,7 @@ const Header = ({ activeHeading }) => {
                       <Link key={index} to={`/product/${i._id}`}>
                         <div className="w-full flex items-center py-3">
                           <img
-                            src={i.images?.[0]?.url}
+                            src={i.images?.[0]}
                             className="w-[40px] h-[40px] mr-[10px] object-cover"
                             alt={i.name}
                           />

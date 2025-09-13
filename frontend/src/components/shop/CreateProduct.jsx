@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
@@ -71,6 +71,19 @@ const CreateProduct = () => {
 
     await dispatch(createProduct(productData));
   }
+
+
+    useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (success) {
+      toast.success("Product created successfully!");
+      navigate("/dashboard-products");
+      window.location.reload();
+    }
+  }, [error, success, navigate]);
+  
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[80vh] rounded-[4px] bg-white">

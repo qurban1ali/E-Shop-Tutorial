@@ -13,70 +13,43 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const sendShopToken = require("../utils/shopToken");
 
 // CREATE SHOP
-router.post(
-  "/create-shop",
-  upload.single("avatar"),
-  async (req, res, next) => {
-    try {
-      console.log("📥 req.body:", req.body);
-      console.log("📂 req.file:", req.file);
+router.post("/create-shop", async (req, res, next) => {
+  try {
+    const { name, email, password, avatarUrl, address, phoneNumber, zipCode } = req.body;
 
-      const { email } = req.body;
-      const sellerEmail = await Shop.findOne({ email });
-      if (sellerEmail) {
-        return next(new ErrorHandler("User already exists", 400));
-      }
-
-      if (!req.file) {
-        return next(new ErrorHandler("Avatar is required", 400));
-      }
-
-      // 👉 Upload buffer directly to Cloudinary
-      const result = await cloudinary.uploader.upload_stream(
-        { folder: "shops" },
-        async (error, result) => {
-          if (error) {
-            console.error("❌ Cloudinary upload failed:", error);
-            return next(new ErrorHandler("Image upload failed", 500));
-          }
-
-          const seller = {
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            avatar: {
-              public_id: result.public_id,
-              url: result.secure_url,
-            },
-            address: req.body.address,
-            phoneNumber: req.body.phoneNumber,
-            zipCode: req.body.zipCode,
-          };
-
-          const activationToken = createActivationToken(seller);
-          const activationUrl = `https://e-shop-tutorial-juch.vercel.app/seller/activation/${activationToken}`;
-
-          await sendMail({
-            email: seller.email,
-            subject: "Activate your Shop",
-            message: `Hello ${seller.name}, please click the link to activate your Shop: ${activationUrl}`,
-          });
-
-          return res.status(201).json({
-            success: true,
-            message: `Please check your email (${seller.email}) to activate your Shop.`,
-          });
-        }
-      );
-
-      // Pipe buffer to Cloudinary
-      result.end(req.file.buffer);
-    } catch (error) {
-      console.error("❌ create-shop error:", error);
-      return next(new ErrorHandler(error.message, 400));
+    const shopExists = await Shop.findOne({ email });
+    if (shopExists) {
+      return next(new ErrorHandler("Shop already exists", 400));
     }
+
+    const shop = {
+      name,
+      email,
+      password,
+      address,
+      phoneNumber,
+      zipCode,
+      avatar: { url: avatarUrl || "" },
+    };
+
+    const activationToken = createActivationToken(shop);
+    const activationUrl = `https://e-shop-tutorial-juch.vercel.app/seller/activation/${activationToken}`;
+
+    await sendMail({
+      email: shop.email,
+      subject: "Activate your Shop",
+      message: `Hello ${shop.name}, please click the link to activate your Shop: ${activationUrl}`,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Please check your email (${shop.email}) to activate your Shop.`,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
   }
-);
+});
+
 
 
 // CREATE ACTIVATION TOKEN

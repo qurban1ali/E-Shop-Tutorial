@@ -23,40 +23,44 @@ const ShopCreate = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  let avatarUrl = "";
 
-    // ✅ frontend validation
-    if (!phoneNum || isNaN(phoneNum)) {
-      toast.error("Please enter a valid phone number");
-      return;
+  try {
+    if (avatar) {
+      const formData = new FormData();
+      formData.append("file", avatar);
+      formData.append("upload_preset", "ecommrence"); // must exist in Cloudinary
+
+      const cloudRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+        formData
+      );
+      avatarUrl = cloudRes.data.secure_url;
     }
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const newForm = new FormData();
-    newForm.append("avatar", avatar);
-    newForm.append("name", name);
-    newForm.append("email", email);
-    newForm.append("password", password);
-    newForm.append("zipCode", zipCode);
-    newForm.append("phoneNumber", phoneNum); // ✅ will now always send a string number
-    newForm.append("address", address);
 
-    axios
-      .post(`${server}/shop/create-shop`, newForm, config)
-      .then((resp) => {
-        toast.success(resp.data.message);
-        // ✅ Reset form
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar(null);
-        setZipCode("");
-        setAddress("");
-        setPhoneNum(""); // ✅ reset to empty string
-      })
-      .catch((err) => {
-        toast.error(err.response?.data?.message || "Something went wrong");
-      });
-  };
+    const { data } = await axios.post(`${server}/shop/create-shop`, {
+      name,
+      email,
+      password,
+      address,
+      phoneNumber: phoneNum,
+      zipCode,
+      avatarUrl,
+    });
+
+    toast.success(data.message);
+    setName("");
+    setEmail("");
+    setPassword("");
+    setAvatar(null);
+    setZipCode("");
+    setAddress("");
+    setPhoneNum("");
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Something went wrong");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-start pt-6 sm:px-6 lg:px-8">

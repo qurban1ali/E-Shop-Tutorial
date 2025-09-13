@@ -145,7 +145,7 @@ const UserOrderDetails = () => {
 
             <div className="flex items-center mt-4">
               <img
-                src={selectedItem?.images[0]?.url || selectedItem?.images[0]}
+                src={selectedItem?.images[0]|| selectedItem?.images[0]}
                 alt={selectedItem?.name}
                 className="w-[80px] h-[80px] object-cover rounded"
               />

@@ -71,7 +71,7 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    await dispatch(createProduct(productData)).unwrap();
+    await dispatch(createProduct(productData));
     toast.success("✅ Product created successfully!");
     navigate("/dashboard");
   } catch (err) {

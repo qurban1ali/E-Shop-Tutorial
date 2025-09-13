@@ -117,26 +117,31 @@ export const updateUserAddress = ( country,
 
 // delete user address
 
- export const deleteUserAddress = (id) => async (dispatch) => {
+// delete user address
+export const deleteUserAddress = (id) => async (dispatch) => {
   try {
-    dispatch({
-      type: "deleteUserAddressRequest"
-    })
-      const {data} = await axios.delete(`${server}/user/delete-user-address/:${id}`, {withCredentials: true});
+    dispatch({ type: "deleteUserAddressRequest" });
+
+    const { data } = await axios.delete(
+      `${server}/user/delete-user-address/${id}`,  // ✅ fixed
+      { withCredentials: true }
+    );
+
     dispatch({
       type: "deleteUserAddressSuccess",
       payload: {
         successMessage: "Address deleted successfully!",
-        user:data.user
-      }
-    })
+        user: data.user,
+      },
+    });
   } catch (error) {
-       dispatch({
-    type:"deleteUserAddressFailed",
-    payload:error.response?.data.message
-  })
+    dispatch({
+      type: "deleteUserAddressFailed",
+      payload: error.response?.data.message || "Something went wrong",
+    });
   }
- }
+};
+
 
   
 

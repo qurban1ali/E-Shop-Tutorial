@@ -49,18 +49,20 @@ useEffect(() => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    await axios.post(
-      `${server}/coupon/create-coupon-code`,
-      {
-        name,
-        minAmount,
-        maxAmount,
-        selectedProducts,
-        value,
-        shopId: seller._id, // ✅ FIXED
-      },
-      { withCredentials: true }
-    );
+await axios.post(
+  `${server}/coupon/create-coupon-code`,
+  {
+    name,
+    minAmount,
+    maxAmount,
+    selectedProducts, // should be product _id(s)
+    value,
+    shop: seller._id, // ✅ matches schema
+  },
+  { withCredentials: true }
+);
+
+
 
     toast.success("Coupon code created successfully!");
     setOpen(false);

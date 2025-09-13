@@ -16,72 +16,68 @@ const sendShopToken = require("../utils/shopToken");
 router.post(
   "/create-shop",
   upload.single("avatar"),
-  async (req, resp, next) => {
+  async (req, res, next) => {
     try {
+      console.log("📥 req.body:", req.body);
+      console.log("📂 req.file:", req.file);
+
       const { email } = req.body;
       const sellerEmail = await Shop.findOne({ email });
       if (sellerEmail) {
-        const filename = req.file?.filename;
-
-        if (filename) {
-          const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
-            req.file.filename
-          }`;
-
-          try {
-            // Try to delete the uploaded file
-            await fs.promises.unlink(filePath);
-            console.log(`✅ Deleted file: ${filename}`);
-          } catch (err) {
-            console.error(
-              `⚠️ Failed to delete file (${filename}):`,
-              err.message
-            );
-            // Optional: Don't block user creation just because of file deletion failure
-          }
-        } else {
-          console.warn("⚠️ No file found to delete.");
-        }
-
         return next(new ErrorHandler("User already exists", 400));
       }
 
-      const fileUrl = path.join("uploads/", req.file.filename);
+      if (!req.file) {
+        return next(new ErrorHandler("Avatar is required", 400));
+      }
 
-      // const avatar = {
-      //   public_id: req.file.filename,
-      //   url: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
-      // };
+      // 👉 Upload buffer directly to Cloudinary
+      const result = await cloudinary.uploader.upload_stream(
+        { folder: "shops" },
+        async (error, result) => {
+          if (error) {
+            console.error("❌ Cloudinary upload failed:", error);
+            return next(new ErrorHandler("Image upload failed", 500));
+          }
 
-      const seller = {
-        name: req.body.name,
-        email: email,
-        password: req.body.password,
-        avatar: {
-          url: fileUrl,
-        },
-        address: req.body.address,
-        phoneNumber: req.body.phoneNumber,
-        zipCode: req.body.zipCode,
-      };
-      const activationToken = createActivationToken(seller);
-      const activationUrl = `https://e-shop-tutorial-juch.vercel.app/seller/activation/${activationToken}`;
+          const seller = {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            avatar: {
+              public_id: result.public_id,
+              url: result.secure_url,
+            },
+            address: req.body.address,
+            phoneNumber: req.body.phoneNumber,
+            zipCode: req.body.zipCode,
+          };
 
-      await sendMail({
-        email: seller.email,
-        subject: "Activate your Shop",
-        message: `Hello ${seller.name}, please click the link to activate your Shop: ${activationUrl}`,
-      });
+          const activationToken = createActivationToken(seller);
+          const activationUrl = `https://e-shop-tutorial-juch.vercel.app/seller/activation/${activationToken}`;
 
-      resp.status(201).json({
-        success: true,
-        message: `Please check your email (${seller.email}) to activate your Shop.`,
-      });
+          await sendMail({
+            email: seller.email,
+            subject: "Activate your Shop",
+            message: `Hello ${seller.name}, please click the link to activate your Shop: ${activationUrl}`,
+          });
+
+          return res.status(201).json({
+            success: true,
+            message: `Please check your email (${seller.email}) to activate your Shop.`,
+          });
+        }
+      );
+
+      // Pipe buffer to Cloudinary
+      result.end(req.file.buffer);
     } catch (error) {
+      console.error("❌ create-shop error:", error);
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
+
 
 // CREATE ACTIVATION TOKEN
 const createActivationToken = (seller) => {

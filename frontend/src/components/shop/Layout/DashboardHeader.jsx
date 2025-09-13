@@ -3,19 +3,11 @@ import { AiOutlineGift } from "react-icons/ai";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {FiPackage, FiShoppingBag} from  "react-icons/fi"
+import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { BiMessageSquareDetail } from "react-icons/bi";
 
 const DashboardHeader = () => {
-  
   const { seller } = useSelector((state) => state.seller);
-
-
-    const avatarUrl = seller?.avatar?.url;
-  const fullAvatarUrl =
-    avatarUrl && !avatarUrl.startsWith("http")
-      ? `${avatarUrl.startsWith("/") ? "" : "/"}${avatarUrl.url}`
-      : avatarUrl.url || null;
 
   return (
     <div className="w-full sticky top-0 flex items-center justify-between h-[80px] bg-white shadow left-0 z-30 px-4">
@@ -30,7 +22,7 @@ const DashboardHeader = () => {
 
       <div className="flex items-center">
         <div className="flex items-center mr-4">
-          <Link to="/dashboard/cupouns"  className="800px:block hidden">
+          <Link to="/dashboard/cupouns" className="800px:block hidden">
             <AiOutlineGift
               color="#555"
               size={30}
@@ -38,7 +30,7 @@ const DashboardHeader = () => {
             />
           </Link>
 
-           <Link to="/dashboard-events"  className="800px:block hidden">
+          <Link to="/dashboard-events" className="800px:block hidden">
             <MdOutlineLocalOffer
               color="#555"
               size={30}
@@ -46,7 +38,7 @@ const DashboardHeader = () => {
             />
           </Link>
 
-          <Link to="/dashboard-products"  className="800px:block hidden">
+          <Link to="/dashboard-products" className="800px:block hidden">
             <FiShoppingBag
               color="#555"
               size={30}
@@ -54,16 +46,11 @@ const DashboardHeader = () => {
             />
           </Link>
 
-          
-          <Link to="/dashboard-orders"  className="800px:block hidden">
-            <FiPackage
-              color="#555"
-              size={30}
-              className="mx-5 cursor-pointer"
-            />
+          <Link to="/dashboard-orders" className="800px:block hidden">
+            <FiPackage color="#555" size={30} className="mx-5 cursor-pointer" />
           </Link>
 
-            <Link to="/dashboard-messages"  className="800px:block hidden">
+          <Link to="/dashboard-messages" className="800px:block hidden">
             <BiMessageSquareDetail
               color="#555"
               size={30}
@@ -71,9 +58,12 @@ const DashboardHeader = () => {
             />
           </Link>
 
-
           <Link to={`/shop/${seller?._id}`}>
-          <img src={fullAvatarUrl} alt="" className="w-[50px] h-[50px] rounded-full object-cover" />
+            <img
+              src={`${seller.avatar?.url}`}
+              alt=""
+              className="w-[50px] h-[50px] rounded-full object-cover"
+            />{" "}
           </Link>
         </div>
       </div>

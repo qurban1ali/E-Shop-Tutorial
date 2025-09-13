@@ -22,25 +22,28 @@ const CreateEvent = () => {
   const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
   const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
+  const handleStartDateChange = (e) => {
+    const startDate = new Date(e.target.value);
+    const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000); // Minimum end date is 3 days after start date
+    setStartDate(startDate);
+    setEndDate(null);
+    document.getElementById("end-date").min = minEndDate
+      .toISOString()
+      .slice(0, 10); // Set the minimum end date
+  };
+  const handleEndDateChange = (e) => {
+    const endDate = new Date(e.target.value);
+    setEndDate(endDate);
+  };
 
-
-    const handleStartDateChange = (e) => {
-        const startDate = new Date(e.target.value); 
-        const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000); // Minimum end date is 3 days after start date
-        setStartDate(startDate);
-        setEndDate(null);
-        document.getElementById("end-date").min = minEndDate.toISOString().slice(0, 10); // Set the minimum end date
-    }
-    const handleEndDateChange = (e) => {
-           const endDate = new Date(e.target.value); 
-           setEndDate(endDate);
-
-    };
-
-    const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format 
-    const minEndDate = startDate ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : today; // Minimum end date is 3 days after start date
+  const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+  const minEndDate = startDate
+    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10)
+    : today; // Minimum end date is 3 days after start date
 
   useEffect(() => {
     if (error) {
@@ -49,66 +52,63 @@ const CreateEvent = () => {
     if (success) {
       toast.success("Event created successfully!");
       navigate("/dashboard-events");
-      window.location.reload()
+      window.location.reload();
     }
   }, [dispatch, error, success]);
 
+  // Upload images to Cloudinary
+  const handleImageChange = async (e) => {
+    e.preventDefault();
+    const files = Array.from(e.target.files);
 
+    for (let file of files) {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "ecommrence"); // must exist in your Cloudinary
+      data.append("cloud_name", "du6xqru9r");
 
- // Upload images to Cloudinary
-const handleImageChange = async (e) => {
-  e.preventDefault();
-  const files = Array.from(e.target.files);
+      try {
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+          data
+        );
 
-  for (let file of files) {
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "ecommrence"); // must exist in your Cloudinary
-    data.append("cloud_name", "du6xqru9r");
-
-    try {
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
-        data
-      );
-
-      if (res.data.secure_url) {
-        setImages((prev) => [...prev, res.data.secure_url]); // ✅ store Cloudinary URLs
-      } else {
-        toast.error("Image upload failed!");
+        if (res.data.secure_url) {
+          setImages((prev) => [...prev, res.data.secure_url]); // ✅ store Cloudinary URLs
+        } else {
+          toast.error("Image upload failed!");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Error uploading image");
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error uploading image");
     }
-  }
-};
-
-// Submit event (send URLs, not raw files)
-const handleSubmit = (e) => {
-  e.preventDefault();
-
-  if (!images.length) {
-    return toast.error("Please upload at least one image!");
-  }
-
-  const eventData = {
-    name,
-    description,
-    category,
-    tags,
-    originalPrice,
-    discountPrice,
-    stock,
-    shopId: seller._id,
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    images, // ✅ Cloudinary URLs
   };
 
-  dispatch(createevent(eventData));
-};
+  // Submit event (send URLs, not raw files)
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
+    if (!images.length) {
+      return toast.error("Please upload at least one image!");
+    }
+
+    const eventData = {
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      shopId: seller._id,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      images, // ✅ Cloudinary URLs
+    };
+
+    dispatch(createevent(eventData));
+  };
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[115vh] rounded-[4px] bg-white ">
@@ -134,17 +134,16 @@ const handleSubmit = (e) => {
           <label htmlFor="" className="pb-2 ">
             Description <span className="text-red-500">*</span>
           </label>
-           <textarea
-    cols="30"
-    rows="8"
-    required
-    name="description"
-    value={description}
-    onChange={(e) => setDescription(e.target.value)}
-    className="mt-2 block w-full appearance-none px-3 border pt-2 border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-    placeholder="Enter your event product description"
-></textarea>
-
+          <textarea
+            cols="30"
+            rows="8"
+            required
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="mt-2 block w-full appearance-none px-3 border pt-2 border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder="Enter your event product description"
+          ></textarea>
         </div>
         <br />
         <div className="">
@@ -227,7 +226,7 @@ const handleSubmit = (e) => {
           />
         </div>
         <br />
-         <div className="">
+        <div className="">
           <label htmlFor="" className="pb-2 ">
             Event Start Date <span className="text-red-500">*</span>
           </label>
@@ -242,8 +241,8 @@ const handleSubmit = (e) => {
             placeholder="Enter Your event stock..."
           />
         </div>
-          <br />
-         <div className="">
+        <br />
+        <div className="">
           <label htmlFor="" className="pb-2 ">
             Event End Date <span className="text-red-500">*</span>
           </label>
@@ -276,12 +275,12 @@ const handleSubmit = (e) => {
               <AiOutlinePlusCircle size={30} className="mt-3 " color="#555" />
             </label>
             {images &&
-              images.map((i) => (
+              images.map((i, idx) => (
                 <img
-                  src={URL.createObjectURL(i)}
-                  alt=""
-                  key={i}
-                  className="object-cover m-2 h-[120px] w-[120px] "
+                  key={idx}
+                  src={typeof i === "string" ? i : URL.createObjectURL(i)}
+                  alt={`preview-${idx}`}
+                  className="object-cover m-2 h-[120px] w-[120px]"
                 />
               ))}
           </div>

@@ -14,7 +14,7 @@ const EventCard = ({ active, data }) => {
 
   // ✅ Ensure Cloudinary image URL is always picked
   const imageUrl =
-    data?.images?.[0]?.url || "/default.png";
+    data?.images?.[0]
 
   const addToCartHandler = (item) => {
     const isItemExists = cart && cart.find((i) => i._id === item._id);

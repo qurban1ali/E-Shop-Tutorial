@@ -103,7 +103,7 @@ const UserOrderDetails = () => {
               key={item._id || index}
             >
               <img
-                src={item.images[0] || item.images[0]}
+                src={item.images[0]?.url || item.images[0]}
                 alt={item.name}
                 className="w-[80px] h-[80px] object-cover rounded"
               />
@@ -145,7 +145,7 @@ const UserOrderDetails = () => {
 
             <div className="flex items-center mt-4">
               <img
-                src={selectedItem?.images[0]|| selectedItem?.images[0]}
+                src={selectedItem?.images[0]?.url || selectedItem?.images[0]}
                 alt={selectedItem?.name}
                 className="w-[80px] h-[80px] object-cover rounded"
               />

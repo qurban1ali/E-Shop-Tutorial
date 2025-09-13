@@ -12,10 +12,9 @@ const cloudinary = require("cloudinary"); // ✅ IMPORT
 
 
 
-// create product
+// Create product (no multer needed)
 router.post(
   "/create-product",
-  upload.array("images"),
   catchAsyncErrors(async (req, res, next) => {
     try {
       const {
@@ -27,29 +26,13 @@ router.post(
         originalPrice,
         discountPrice,
         stock,
+        images, // directly from frontend (secure_urls)
       } = req.body;
 
       // Validate shop
       const shop = await Shop.findById(shopId);
       if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
-      }
-
-      // ✅ Upload images to Cloudinary
-      let images = [];
-      if (req.files && req.files.length > 0) {
-        for (let file of req.files) {
-          const result = await cloudinary.v2.uploader.upload(file.path, {
-            folder: "products",
-          });
-
-          images.push({
-            public_id: result.public_id,
-            url: result.secure_url, // ✅ use secure_url
-          });
-
-          fs.unlinkSync(file.path); // ✅ delete from local uploads
-        }
       }
 
       const productData = {
@@ -62,7 +45,7 @@ router.post(
         stock,
         shopId,
         shop,
-        images,
+        images: images.map((url) => ({ url })), // keep same structure
       };
 
       const product = await Product.create(productData);
@@ -76,6 +59,7 @@ router.post(
     }
   })
 );
+
 
   
 

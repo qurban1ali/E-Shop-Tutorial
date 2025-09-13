@@ -9,34 +9,39 @@ const { upload } = require("../multer");
 const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const catchAsyncError = require("../middleware/catchAsyncError");
 
-// create event
+// Create event
 router.post(
   "/create-event",
-  upload.array("images"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const shopId = req.body.shopId;
+      const { shopId, images, ...rest } = req.body;
+
+      // Validate shop
       const shop = await Shop.findById(shopId);
       if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
-      } else {
-        const files = req.files;
-        const imageUrls = files.map((file) => `/uploads/${file.filename}`);
-        const eventData = req.body;
-        eventData.images = imageUrls;
-        eventData.shop = shop;
-
-        const product = await Event.create(eventData);
-        res.status(201).json({
-          success: true,
-          product,
-        });
       }
+
+      // ✅ images already uploaded to Cloudinary from frontend
+      const eventData = {
+        ...rest,
+        images: images.map((url) => ({ url })), // same structure as products
+        shop,
+        shopId,
+      };
+
+      const event = await Event.create(eventData);
+
+      res.status(201).json({
+        success: true,
+        event,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+
 
 // get all events
 router.get("/get-all-events", async (req, res, next) => {

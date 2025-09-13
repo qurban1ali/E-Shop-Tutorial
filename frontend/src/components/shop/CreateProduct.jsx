@@ -22,35 +22,35 @@ const CreateProduct = () => {
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
 
-  // Upload to Cloudinary using Axios
-  const handleImageChange = async (e) => {
-    const files = Array.from(e.target.files);
+ // Upload images to Cloudinary
+const handleImageChange = async (e) => {
+  const files = Array.from(e.target.files);
 
-    for (let file of files) {
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "ecommrence"); // Must exist in your Cloudinary
-      data.append("cloud_name", "du6xqru9r");
+  for (let file of files) {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "ecommrence"); // must exist in Cloudinary
+    data.append("cloud_name", "du6xqru9r");
 
-      try {
-        const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/du6xqru9r/image/upload`,
-          data
-        );
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+        data
+      );
 
-        if (res.data.secure_url) {
-          setImages((prev) => [...prev, res.data.secure_url]);
-        } else {
-          toast.error("Image upload failed!");
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Error uploading image");
+      if (res.data.secure_url) {
+        setImages((prev) => [...prev, res.data.secure_url]);
+      } else {
+        toast.error("Image upload failed!");
       }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error uploading image");
     }
-  };
+  }
+};
 
- // Submit product
+// Submit product
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -67,19 +67,18 @@ const handleSubmit = async (e) => {
     discountPrice,
     stock,
     shopId: seller._id,
-    images,
+    images, // already Cloudinary URLs
   };
 
   try {
-    // Dispatch Redux thunk
     await dispatch(createProduct(productData)).unwrap();
-
     toast.success("✅ Product created successfully!");
     navigate("/dashboard");
   } catch (err) {
     toast.error(err?.message || "❌ Failed to create product");
   }
 };
+
 
 
 

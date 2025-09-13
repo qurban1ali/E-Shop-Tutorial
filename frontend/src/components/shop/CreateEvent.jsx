@@ -5,6 +5,7 @@ import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { createevent } from "../../redux/actions/event";
+import axios from "axios";
 
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -54,32 +55,60 @@ const CreateEvent = () => {
 
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ // Upload images to Cloudinary
+const handleImageChange = async (e) => {
+  e.preventDefault();
+  const files = Array.from(e.target.files);
 
-    const newForm = new FormData();
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-    newForm.append("Start_Date", startDate.toISOString());
-    newForm.append("Finish_Date", endDate.toISOString());
-    dispatch(createevent(newForm));
+  for (let file of files) {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "ecommrence"); // must exist in your Cloudinary
+    data.append("cloud_name", "du6xqru9r");
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/du6xqru9r/image/upload",
+        data
+      );
+
+      if (res.data.secure_url) {
+        setImages((prev) => [...prev, res.data.secure_url]); // ✅ store Cloudinary URLs
+      } else {
+        toast.error("Image upload failed!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error uploading image");
+    }
+  }
+};
+
+// Submit event (send URLs, not raw files)
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (!images.length) {
+    return toast.error("Please upload at least one image!");
+  }
+
+  const eventData = {
+    name,
+    description,
+    category,
+    tags,
+    originalPrice,
+    discountPrice,
+    stock,
+    shopId: seller._id,
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+    images, // ✅ Cloudinary URLs
   };
 
-  const handleImageChange = (e) => {
-    e.preventDefault();
+  dispatch(createevent(eventData));
+};
 
-    let files = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...files]);
-  };
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[115vh] rounded-[4px] bg-white ">

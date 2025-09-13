@@ -3,7 +3,7 @@ import axios from "axios";
 
 // create product
 
-export const createProduct = (newForm) => async (dispatch) => {
+export const createProduct = (newForm, productData) => async (dispatch) => {
   try {
     dispatch({ type: "productCreateRequest" });
 
@@ -15,7 +15,8 @@ export const createProduct = (newForm) => async (dispatch) => {
     const { data } = await axios.post(
       `${server}/product/create-product`,
       newForm,
-      config   // ✅ now passing config correctly
+      productData,
+      config // ✅ now passing config correctly
     );
 
     dispatch({
@@ -29,7 +30,6 @@ export const createProduct = (newForm) => async (dispatch) => {
     });
   }
 };
-
 
 // get all products
 
@@ -54,36 +54,32 @@ export const getAllProductsShop = (id) => async (dispatch) => {
   }
 };
 
-
 // delete product of shop
-  export const deleteProduct = (id) => async (dispatch) => {
-   try {
+export const deleteProduct = (id) => async (dispatch) => {
+  try {
     dispatch({
-        type: "deleteProductRequest"
-    })
-    
- const { data } = await axios.delete(
-  `${server}/product/delete-shop-product/${id}`,
-  { withCredentials: true }
-);
+      type: "deleteProductRequest",
+    });
 
+    const { data } = await axios.delete(
+      `${server}/product/delete-shop-product/${id}`,
+      { withCredentials: true }
+    );
 
     dispatch({
       type: "deleteProductSuccess",
       payload: data.message,
     });
-
-   } catch (error) {
-     dispatch({
+  } catch (error) {
+    dispatch({
       type: "deleteProductFail",
       payload: error.response.data.message,
     });
-   }
   }
-
+};
 
 // get all products
-export const getAllProducts = () => async (dispatch) => { 
+export const getAllProducts = () => async (dispatch) => {
   try {
     dispatch({ type: "getAllProductsRequest" });
 
@@ -95,7 +91,7 @@ export const getAllProducts = () => async (dispatch) => {
     });
   } catch (error) {
     dispatch({
-      type: "getAllProductsFail",   // ✅ correct type
+      type: "getAllProductsFail", // ✅ correct type
       payload: error.response?.data?.message || error.message,
     });
   }

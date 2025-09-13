@@ -69,14 +69,8 @@ const CreateProduct = () => {
       images, // these are already Cloudinary URLs
     };
 
-    try {
-      await dispatch(createProduct(productData)); // send JSON
-      toast.success("✅ Product created successfully!");
-      navigate("/dashboard");
-    } catch (err) {
-      toast.error(err?.message || "❌ Failed to create product");
-    }
-  };
+    await dispatch(createProduct(productData));
+  }
 
   return (
     <div className="w-[90%] 800px:w-[50%] shadow p-3 overflow-y-scroll h-[80vh] rounded-[4px] bg-white">

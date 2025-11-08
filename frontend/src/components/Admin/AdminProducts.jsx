@@ -12,7 +12,7 @@ const AdminProducts = () => {
   const [data, setData] = useState([])
 const dispatch = useDispatch();
 
-
+// fetch all products of admin
   useEffect(() => {
      axios.get(`${server}/product/admin-all-products`, {withCredentials:true}).then((res) => {
         setData(res.data.products)

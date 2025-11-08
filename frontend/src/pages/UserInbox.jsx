@@ -83,7 +83,7 @@ const UserInbox = () => {
     return online ? true : false;
   };
 
-  // get messages
+  // get mesege
   useEffect(() => {
     const getMessage = async () => {
       try {
@@ -98,7 +98,7 @@ const UserInbox = () => {
     getMessage();
   }, [currentChat]);
 
-  // create new message
+  // create message
   const sendMessageHandler = async (e) => {
     e.preventDefault();
 

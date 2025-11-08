@@ -10,7 +10,7 @@ import styles from "../../styles/style";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { MdOutlineTrackChanges, MdTrackChanges } from "react-icons/md";
+import { MdTrackChanges } from "react-icons/md";
 import { server } from "../../server";
 import {
   deleteUserAddress,
@@ -483,7 +483,6 @@ const passwordChangeHandler = async (e) => {
       </h1>
       <div className="w-full">
         <form
-          aria-required
           onSubmit={passwordChangeHandler}
           className="flex flex-col items-center"
         >
@@ -594,7 +593,7 @@ const Address = () => {
               Add New Adress
             </h1>
             <div className="w-full">
-              <form aria-required onSubmit={handleSubmit} className="w-full">
+              <form  onSubmit={handleSubmit} className="w-full">
                 <div className="w-full block p-4">
                   <div className="w-full pb-2">
                     <label className="block pb-2">Country</label>

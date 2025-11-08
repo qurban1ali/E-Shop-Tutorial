@@ -267,7 +267,7 @@ const Header = ({ activeHeading }) => {
                 </div>
                 <RxCross1
                   size={40}
-                  className="mt-5 cursor-pointer"
+                  className="mt-5 cursor-pointer p-1"
                   onClick={() => setOpen(false)}
                 />
               </div>

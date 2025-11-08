@@ -3,8 +3,11 @@ import styles from "../../../styles/style";
 import ProductCard from "../productCard/productCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../../redux/actions/product";
+  import { useTranslation } from "react-i18next";
 
 const BestDeals = () => {
+  const { t } = useTranslation();
+        const { i18n } = useTranslation();
   const [data, setData] = useState([]);
   const {allProducts} = useSelector((state) => state.products);
     const dispatch = useDispatch();
@@ -42,7 +45,7 @@ const firstFive = [...allProducts]
     <div>
       <div className={`${styles.section}`}>
         <div className={`${styles.heading}`}>
-          <h1>Best Deals </h1>
+          <h1>{t("best_deals")} </h1>
         </div>
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-10 border-0">
           {

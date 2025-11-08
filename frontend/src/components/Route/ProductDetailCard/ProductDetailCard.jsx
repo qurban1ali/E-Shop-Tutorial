@@ -81,7 +81,7 @@ const ProductDetailCard = ({ setOpen, data }) => {
               <div className="w-full 800px:w-[50%]">
                 <img
                   src={
-                    data?.images?.[0]?.url ||
+                    data?.images?.[0] ||
                     data?.images?.[0] ||
                     "/placeholder.png"
                   }

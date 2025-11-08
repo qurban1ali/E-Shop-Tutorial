@@ -4,6 +4,7 @@ import App from "./App";
 import { Provider } from "react-redux";
 import Store from "./redux/store";
 
+
 // Create root using React 18 API
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

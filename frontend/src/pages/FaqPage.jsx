@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import styles from "../styles/style";
+import { useTranslation } from "react-i18next";
+
 
 const FaqPage = () => {
   return (
@@ -14,6 +16,8 @@ const FaqPage = () => {
 };
 
 const Faq = () => {
+      const { t } = useTranslation();
+
   const [acivetab, setActiveTab] = useState(0);
   const toogleTab = (tab) => {
     if (acivetab === tab) {
@@ -25,7 +29,8 @@ const Faq = () => {
 
   return (
     <div className={`${styles.section} my-8 `}>
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 ">FAQ</h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-8 ">{t("faq")}
+</h2>
       <div className="mx-auto space-y-4">
         {/* SINGLE FAQ */}
         <div className="border-b  border-gray-900 pb-4">
@@ -34,7 +39,7 @@ const Faq = () => {
             onClick={() => toogleTab(1)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+               {t("how_i_track_order")}
             </span>
             {acivetab === 1 ? (
               <svg
@@ -70,9 +75,7 @@ const Faq = () => {
           {acivetab === 1 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+                {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -84,7 +87,7 @@ const Faq = () => {
             onClick={() => toogleTab(2)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                             {t("how_i_track_order")}
             </span>
             {acivetab === 2 ? (
               <svg
@@ -120,9 +123,7 @@ const Faq = () => {
           {acivetab === 2 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+                {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -134,7 +135,7 @@ const Faq = () => {
             onClick={() => toogleTab(3)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                            {t("how_i_track_order")}
             </span>
             {acivetab === 3 ? (
               <svg
@@ -170,9 +171,7 @@ const Faq = () => {
           {acivetab === 3 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+                {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -184,7 +183,7 @@ const Faq = () => {
             onClick={() => toogleTab(4)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                            {t("how_i_track_order")}
             </span>
             {acivetab === 4 ? (
               <svg
@@ -220,9 +219,7 @@ const Faq = () => {
           {acivetab === 4 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+               {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -234,7 +231,7 @@ const Faq = () => {
             onClick={() => toogleTab(5)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                             {t("how_i_track_order")}
             </span>
             {acivetab === 5 ? (
               <svg
@@ -270,9 +267,7 @@ const Faq = () => {
           {acivetab === 5 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+                {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -284,7 +279,7 @@ const Faq = () => {
             onClick={() => toogleTab(6)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                           {t("how_i_track_order")}
             </span>
             {acivetab === 6 ? (
               <svg
@@ -320,9 +315,7 @@ const Faq = () => {
           {acivetab === 6 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+               {t("faq_lorem")}
               </p>
             </div>
           )}
@@ -334,7 +327,7 @@ const Faq = () => {
             onClick={() => toogleTab(7)}
           >
             <span className="text-lg font-medium text-gray-900">
-              How I track my order?
+                            {t("how_i_track_order")}
             </span>
             {acivetab === 7 ? (
               <svg
@@ -370,9 +363,7 @@ const Faq = () => {
           {acivetab === 7 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis expedita facere officia quidem reiciendis doloribus
-                aliquid animi corrupti similique{" "}
+                {t("faq_lorem")}
               </p>
             </div>
           )}

@@ -2,8 +2,12 @@ import React, { useEffect } from "react";
 import styles from "../../styles/style";
 import EventCard from "./EventCard.jsx";
 import { useSelector } from "react-redux";
+  import { useTranslation } from "react-i18next";
+
 
 const Event = () => {
+    const { t } = useTranslation();
+          const { i18n } = useTranslation();
   const { allEvents, isLoading } = useSelector((state) => state.event);
   if (isLoading) {
     return (
@@ -16,13 +20,13 @@ const Event = () => {
   return (
     <div className={`${styles.section}`}>
       <div className={`${styles.heading}`}>
-        <h1>Popular Events</h1>
+        <h1>{t("popular_events")}</h1>
       </div>
       <div className="w-full grid">
         {allEvents && allEvents.length > 0 ? (
           <EventCard data={allEvents && allEvents[0]} />
         ) : (
-          <p>No events available</p>
+          <p>{t("no_events")}</p>
         )}
       </div>
     </div>

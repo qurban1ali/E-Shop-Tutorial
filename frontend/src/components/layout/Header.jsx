@@ -17,13 +17,18 @@ import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
 import { Avatar } from "../../assests/asset";
 import { RxCross1 } from "react-icons/rx";
+  import { useTranslation } from "react-i18next";
+
 
 const Header = ({ activeHeading }) => {
+    const { t } = useTranslation();
+      const { i18n } = useTranslation();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { allProducts } = useSelector((state) => state.products);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
+
 
   // ✅ Fix avatar logic
   const fullAvatarUrl = user?.avatar?.url || Avatar;
@@ -74,7 +79,7 @@ const Header = ({ activeHeading }) => {
           <div className="w-[50%] relative">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={t('search_Products')}
               value={searchTerm}
               onChange={handleSearchChange}
               className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
@@ -105,7 +110,7 @@ const Header = ({ activeHeading }) => {
           <div className={`${styles.button}`}>
             <Link to={isSeller ? "/dashboard" : "/shop-create"}>
               <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
+                {isSeller ? t('Go Dashboard') : t('becomeSeller')}{" "}
                 <IoIosArrowForward className="ml-1 mt-1" />
               </h1>
             </Link>
@@ -129,7 +134,7 @@ const Header = ({ activeHeading }) => {
           >
             <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
             <button className="h-full w-[70%] pl-5 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
-              All Categories
+              {t("All Categories")}
             </button>
             <IoIosArrowDown
               className="absolute right-2 top-4"
@@ -145,6 +150,19 @@ const Header = ({ activeHeading }) => {
 
           {/* NAVBAR */}
           <Navbar active={activeHeading} />
+
+
+
+           <div className="flex items-center mr-[20px]">
+  <select
+    onChange={(e) => i18n.changeLanguage(e.target.value)}
+    className="px-2 py-1 text-sm border border-white text-white rounded bg-transparent"
+  >
+    <option value="en" className="text-black">English</option>
+    <option value="ur" className="text-black">اردو</option>
+    <option value="ar" className="text-black">العربية</option>
+  </select>
+</div>
 
           {/* RIGHT ICONS */}
           <div className="flex items-center">
@@ -258,7 +276,7 @@ const Header = ({ activeHeading }) => {
               <div className="my-8 w-[92%] m-auto">
                 <input
                   type="search"
-                  placeholder="Search products..."
+                   placeholder={t("search_Products")}
                   className="h-10 w-full px-2 border-[#3957db] border-2 rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}

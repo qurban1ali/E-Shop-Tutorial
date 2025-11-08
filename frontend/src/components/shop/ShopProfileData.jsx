@@ -6,8 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
 import Ratings from "../Products/Ratings";
 import { getAllEventsShop } from "../../redux/actions/event";
+  import { useTranslation } from "react-i18next";
+
 
 const ShopProfileData = ({ isOwner }) => {
+   const { t } = useTranslation();
+        const { i18n } = useTranslation();
   const [active, setActive] = useState(1);
   const { shopProducts } = useSelector((state) => state.products);
   const { events } = useSelector((state) => state.event);
@@ -67,7 +71,7 @@ const ShopProfileData = ({ isOwner }) => {
             <div>
               <Link to="/dashboard">
                 <div className={`${styles.button} h-[42px] !rounded-[4px]  hidden 800px:flex text-center item-center`}>
-                  <span className="text-[#fff]">Go Dashboard</span>
+                  <span className="text-[#fff]">{t('Go Dashboard')}</span>
                 </div>
               </Link>
             </div>

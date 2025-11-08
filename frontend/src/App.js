@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRout from "./routes/ProtectedRout.js";
 import { ShopHomePage } from "./ShopRout.js";
+import './i18n.js'
+
 import {
   LoginPage,
   SignUpPage,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/style";
 import { BsFillBagFill } from "react-icons/bs";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfShop, getAllOrdersOfUser } from "../../redux/actions/order";
 import {  server } from "../../server";
@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const OrderDetails = () => {
-  const { orders, isLoading } = useSelector((state) => state.order);
+  const { orders} = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();

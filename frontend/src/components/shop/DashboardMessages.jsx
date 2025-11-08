@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {  server } from "../../server";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -379,7 +379,6 @@ const SellerInbox = ({
 
     {/* send message input */}
     <form
-      aria-required={true}
       className="p-3 relative w-full flex justify-between items-center"
       onSubmit={sendMessageHandler}
     >

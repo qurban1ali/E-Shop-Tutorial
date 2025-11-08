@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "../../styles/style";
 import EventCard from "./EventCard.jsx";
 import { useSelector } from "react-redux";
@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 
 const Event = () => {
     const { t } = useTranslation();
-          const { i18n } = useTranslation();
   const { allEvents, isLoading } = useSelector((state) => state.event);
   if (isLoading) {
     return (

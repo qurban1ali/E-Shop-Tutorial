@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/style";
-import { AiOutlineMoneyCollect } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineMoneyCollect } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { MdBorderClear } from "react-icons/md";
 import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import { server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfAdmin } from "../../redux/actions/order";
 import Loader from "../layout/Loader";
 import { getAllSellers } from "../../redux/actions/seller";
 
-
 const AdminDashboardMain = () => {
-  const dispatch = useDispatch();
 //   const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
 
   const { adminOrders, isLoading } = useSelector((state) => state.order);
   const { sellers } = useSelector((state) => state.seller);
@@ -20,7 +21,7 @@ const AdminDashboardMain = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
     dispatch(getAllSellers())
-  }, [dispatch]);
+  }, []);
 
 
      const adminEarning = adminOrders && adminOrders.reduce((acc, item) => acc + item.totalPrice * .10, 0)   

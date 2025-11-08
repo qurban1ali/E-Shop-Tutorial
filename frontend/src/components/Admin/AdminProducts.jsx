@@ -5,19 +5,15 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { server } from "../../server";
 import { AiOutlineEye } from "react-icons/ai";
-import { useDispatch } from "react-redux";
-
 
 const AdminProducts = () => {
   const [data, setData] = useState([])
-const dispatch = useDispatch();
-
 
   useEffect(() => {
      axios.get(`${server}/product/admin-all-products`, {withCredentials:true}).then((res) => {
         setData(res.data.products)
      })
-  }, [dispatch]);
+  }, []);
 
 
   const columns = [

@@ -30,7 +30,7 @@ const AllSellers = () => {
       );
       toast.success(data.message);
       setOpen(false);
-      dispatch(getAllUsers()); // refresh users after delete
+      dispatch(getAllUsers()); // refresh users after delete by fetching again
     } catch (error) {
       toast.error(error.response?.data?.message || "Delete failed");
     }

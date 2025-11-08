@@ -16,14 +16,14 @@ const ActivationPage = () => {
           });
           console.log(resp.data.message);
         } catch (error) {
-  console.log("Full error object:", error.response);
-  setError(true);
-}
-
+          console.log("Full error object:", error.response);
+          setError(true);
+        }
       };
       activationEmail();
     }
-  }, []);
+  }, [activation_token]); // Added dependency
+
   return (
     <div
       style={{
@@ -32,15 +32,10 @@ const ActivationPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-      }}>
-        {
-            error?(
-                <p>Your Token is expired</p>
-            ):(
-                <p>Your account has been created successfully</p>
-            )
-        }
-      </div>
+      }}
+    >
+      {error ? <p>Your Token is expired</p> : <p>Your account has been created successfully</p>}
+    </div>
   );
 };
 

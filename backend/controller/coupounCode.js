@@ -29,7 +29,7 @@ router.get(
   })
 );
 
-// Get coupon value by name
+// Get coupon value by name for users
 router.get(
   "/get-coupon-value/:name",
   catchAsyncErrors(async (req, res, next) => {

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
@@ -7,46 +6,24 @@ import { server } from "../../server";
 import { AiOutlineEye } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 
-
 const AdminProducts = () => {
-  const [data, setData] = useState([])
-const dispatch = useDispatch();
+  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
 
-// fetch all products of admin
   useEffect(() => {
-     axios.get(`${server}/product/admin-all-products`, {withCredentials:true}).then((res) => {
-        setData(res.data.products)
-     })
-  }, [dispatch]);
-
+    axios
+      .get(`${server}/product/admin-all-products`, { withCredentials: true })
+      .then((res) => {
+        setData(res.data.products);
+      });
+  }, []); // Removed dispatch from dependencies
 
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
-    {
-      field: "name",
-      headerName: "Name",
-      minWidth: 180,
-      flex: 1.4,
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      minWidth: 100,
-      flex: 0.6,
-    },
-    {
-      field: "stock",
-      headerName: "Stock",
-      type: "number",
-      minWidth: 80,
-      flex: 0.5,
-    },
-    {
-      field: "sold",
-      headerName: "Sold Out",
-      minWidth: 130,
-      flex: 0.6,
-    },
+    { field: "name", headerName: "Name", minWidth: 180, flex: 1.4 },
+    { field: "price", headerName: "Price", minWidth: 100, flex: 0.6 },
+    { field: "stock", headerName: "Stock", type: "number", minWidth: 80, flex: 0.5 },
+    { field: "sold", headerName: "Sold Out", minWidth: 130, flex: 0.6 },
     {
       field: "Preview",
       flex: 0.8,
@@ -55,21 +32,16 @@ const dispatch = useDispatch();
       type: "number",
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.id;
-    
+        const d = params.row.id; // Still unused, address below
         return (
-          <>
-            <Link to={`/product/${params.id}`}>
-              <button>
-                <AiOutlineEye size={20} />
-              </button>
-            </Link>
-          </>
+          <Link to={`/product/${params.id}`}>
+            <button>
+              <AiOutlineEye size={20} />
+            </button>
+          </Link>
         );
       },
     },
-   
-    
   ];
 
   const row = [];
@@ -85,18 +57,16 @@ const dispatch = useDispatch();
     });
 
   return (
-    
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableRowSelectionOnClick
-            autoHeight
-          />
-        </div>
-      )}
-    
+    <div className="w-full mx-8 pt-1 mt-10 bg-white">
+      <DataGrid
+        rows={row}
+        columns={columns}
+        pageSize={10}
+        disableRowSelectionOnClick
+        autoHeight
+      />
+    </div>
+  );
+};
 
-
-export default AdminProducts
+export default AdminProducts;

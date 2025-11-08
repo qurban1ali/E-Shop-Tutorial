@@ -41,7 +41,7 @@ router.post(
 
 
 
-// get all messages with conversation id
+// get all messages with conversation id for a conversation
 router.get("/get-all-messages/:id",catchAsyncError(async(req,res,next) => {
   try {
     const messages = await Messages.find({

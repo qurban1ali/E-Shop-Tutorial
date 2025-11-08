@@ -23,3 +23,26 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+
+
+// const mongoose = require("mongoose");
+
+// let isConnected = false;
+
+// const connectDB = async () => {
+//   if (isConnected) return;
+
+//   try {
+//     const connection = await mongoose.connect(process.env.DB_URL);
+
+//     isConnected = connection.connection.readyState === 1;
+
+//     console.log(`✅ MongoDB connected: ${connection.connection.host}`);
+//   } catch (err) {
+//     console.error("❌ MongoDB connection error:", err.message);
+//     process.exit(1);
+//   }
+// };
+
+// module.exports = connectDB;
+ 

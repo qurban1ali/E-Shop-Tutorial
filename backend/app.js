@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Enable CORS for frontend
 app.use(
   cors({
-    origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain
+    origin: ["https://e-shop-tutorial-juch.vercel.app"], // frontend domain 
+    // origin:"http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
